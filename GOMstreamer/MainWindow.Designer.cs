@@ -111,9 +111,9 @@
             this.lblStream.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.lblStream.Location = new System.Drawing.Point(9, 115);
             this.lblStream.Name = "lblStream";
-            this.lblStream.Size = new System.Drawing.Size(128, 13);
+            this.lblStream.Size = new System.Drawing.Size(125, 13);
             this.lblStream.TabIndex = 7;
-            this.lblStream.Text = "File to dump the stream to";
+            this.lblStream.Text = "File to save the stream to";
             // 
             // txtdumploc
             // 

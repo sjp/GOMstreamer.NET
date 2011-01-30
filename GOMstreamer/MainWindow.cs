@@ -26,7 +26,26 @@ namespace GOMstreamer
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            txtVLCloc.Text = "";
+
+            // Checking for the Program Files folder location on the OS
+            string progfiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+
+            if (progfiles != "")
+            {
+                txtVLCloc.Text = progfiles + "\\VideoLAN\\VLC\\vlc.exe";
+            }
+            else
+            {
+                txtVLCloc.Text = Environment.GetEnvironmentVariable("ProgramFiles") + "\\VideoLAN\\VLC\\vlc.exe";
+            }
+
+            // Setting the VLC location to the default location
             vlcloc = txtVLCloc.Text;
+
+            // Set the default save location to be dump.ogm on the Desktop
+            txtdumploc.Text = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\dump.ogm";
+            dumploc = txtdumploc.Text;
         }
         
         private void btnDumpLoc_Click(object sender, EventArgs e)
@@ -69,16 +88,36 @@ namespace GOMstreamer
             pass = txtPassword.Text;
             vlcloc = txtVLCloc.Text;
             dumploc = txtdumploc.Text;
+            string dumplocdir = dumploc.Substring(0, dumploc.LastIndexOf("\\"));
 
             // Catch any exceptions and display the message if they're encountered.
             try
             {
+                if (!File.Exists(vlcloc))
+                {
+                    throw new WebException("Please choose a valid VLC location.");
+                }
+
+                if (!Directory.Exists(dumplocdir))
+                {
+                    throw new WebException("Please choose a valid location to save the stream to.");
+                }
+                if (File.Exists(dumploc))
+                {
+                    if (MessageBox.Show("File exists at the stream save location. Do you want to overwrite the file?",
+                                    "Overwrite?",
+                                    MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question) == DialogResult.No)
+                        throw new Exception();
+                }
+
                 saveStream();
             }
             catch (WebException we)
             {
                 MessageBox.Show(we.Message, "GOMstreamer error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            catch (Exception ex) { }
         }
         
         private void btnPlay_Click(object sender, EventArgs e)
@@ -90,6 +129,11 @@ namespace GOMstreamer
             // Catch any exceptions and display the message if they're encountered.
             try
             {
+                if (! File.Exists(vlcloc))
+                {
+                    throw new WebException("Please choose a valid VLC location.");
+                }
+
                 playStream();
             }
             catch (WebException we)
@@ -168,7 +212,7 @@ namespace GOMstreamer
         private string getStreamURL()
         {
             string gomtvURL = "http://www.gomtv.net";
-            string gomtvLiveURL = gomtvURL + "/2011gslsponsors1/live/";
+            string gomtvLiveURL = gomtvURL + "/2011gstl1/live/";
             
             // Signing into GOMtv
             if (!hasSignedIn)
