@@ -43,6 +43,8 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lblStreamURL = new System.Windows.Forms.Label();
             this.txtStreamURL = new System.Windows.Forms.TextBox();
+            this.lblQuality = new System.Windows.Forms.Label();
+            this.cbQuality = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // txtEmail
@@ -137,7 +139,7 @@
             this.btnPlay.Location = new System.Drawing.Point(198, 223);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(179, 50);
-            this.btnPlay.TabIndex = 7;
+            this.btnPlay.TabIndex = 8;
             this.btnPlay.Text = "Play stream";
             this.btnPlay.UseVisualStyleBackColor = true;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
@@ -147,7 +149,7 @@
             this.btnSave.Location = new System.Drawing.Point(12, 223);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(180, 50);
-            this.btnSave.TabIndex = 6;
+            this.btnSave.TabIndex = 7;
             this.btnSave.Text = "Save stream";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -165,14 +167,38 @@
             // 
             this.txtStreamURL.Location = new System.Drawing.Point(15, 188);
             this.txtStreamURL.Name = "txtStreamURL";
-            this.txtStreamURL.Size = new System.Drawing.Size(362, 20);
-            this.txtStreamURL.TabIndex = 8;
+            this.txtStreamURL.Size = new System.Drawing.Size(283, 20);
+            this.txtStreamURL.TabIndex = 9;
+            // 
+            // lblQuality
+            // 
+            this.lblQuality.AutoSize = true;
+            this.lblQuality.Location = new System.Drawing.Point(299, 171);
+            this.lblQuality.Name = "lblQuality";
+            this.lblQuality.Size = new System.Drawing.Size(75, 13);
+            this.lblQuality.TabIndex = 14;
+            this.lblQuality.Text = "Stream Quality";
+            // 
+            // cbQuality
+            // 
+            this.cbQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbQuality.FormattingEnabled = true;
+            this.cbQuality.Items.AddRange(new object[] {
+            "SQTest",
+            "SQ",
+            "HQ"});
+            this.cbQuality.Location = new System.Drawing.Point(302, 187);
+            this.cbQuality.Name = "cbQuality";
+            this.cbQuality.Size = new System.Drawing.Size(75, 21);
+            this.cbQuality.TabIndex = 6;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(389, 285);
+            this.Controls.Add(this.cbQuality);
+            this.Controls.Add(this.lblQuality);
             this.Controls.Add(this.txtStreamURL);
             this.Controls.Add(this.lblStreamURL);
             this.Controls.Add(this.btnSave);
@@ -212,6 +238,8 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label lblStreamURL;
         private System.Windows.Forms.TextBox txtStreamURL;
+        private System.Windows.Forms.Label lblQuality;
+        private System.Windows.Forms.ComboBox cbQuality;
     }
 }
 

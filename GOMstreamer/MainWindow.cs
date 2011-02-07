@@ -16,7 +16,7 @@ namespace GOMstreamer
         string vlcloc = "";
         string dumploc = "";
         string streamloc = "";
-        bool hasSignedIn = false;
+        string streamQuality = "SQTest";
         CookieContainer cookieJar = new CookieContainer();
 
         public MainWindow()
@@ -27,6 +27,10 @@ namespace GOMstreamer
         private void MainWindow_Load(object sender, EventArgs e)
         {
             txtVLCloc.Text = "";
+
+            // Setting default quality to SQTest
+            cbQuality.SelectedIndex = 0;
+            streamQuality = cbQuality.SelectedItem.ToString();
 
             // Checking for the Program Files folder location on the OS
             string progfiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
@@ -88,6 +92,7 @@ namespace GOMstreamer
             pass = txtPassword.Text;
             vlcloc = txtVLCloc.Text;
             dumploc = txtdumploc.Text;
+            streamQuality = cbQuality.SelectedItem.ToString();
             string dumplocdir = dumploc.Substring(0, dumploc.LastIndexOf("\\"));
 
             // Catch any exceptions and display the message if they're encountered.
@@ -125,6 +130,7 @@ namespace GOMstreamer
             email = txtEmail.Text;
             pass = txtPassword.Text;
             vlcloc = txtVLCloc.Text;
+            streamQuality = cbQuality.SelectedItem.ToString();
 
             // Catch any exceptions and display the message if they're encountered.
             try
@@ -145,19 +151,7 @@ namespace GOMstreamer
         private void saveStream()
         {
             dumploc = txtdumploc.Text;
-            string streamURL = "";
-
-            // If we haven't signed in yet, then we haven't got the stream URL.
-            // Otherwise we've got cookies and hopefully a correct stream, meaning we can skip
-            // having to get the stream URL again.
-            if (!hasSignedIn)
-            {
-                streamURL = getStreamURL();
-            }
-            else
-            {
-                streamURL = streamloc;
-            }
+            string streamURL = getStreamURL();
 
             // If the user has changed the text field, update it with the correct value
             if (txtStreamURL.Text != streamURL)
@@ -178,19 +172,7 @@ namespace GOMstreamer
 
         private void playStream()
         {
-            string streamURL = "";
-
-            // If we haven't signed in yet, then we haven't got the stream URL.
-            // Otherwise we've got cookies and hopefully a correct stream, meaning we can skip
-            // having to get the stream URL again.
-            if (!hasSignedIn)
-            {
-                streamURL = getStreamURL();
-            }
-            else
-            {
-                streamURL = streamloc;
-            }
+            string streamURL = getStreamURL();
 
             // If the user has changed the text field, update it with the correct value
             if (txtStreamURL.Text != streamURL)
@@ -213,13 +195,10 @@ namespace GOMstreamer
         {
             string gomtvURL = "http://www.gomtv.net";
             string gomtvLiveURL = gomtvURL + "/2011gstl1/live/";
-            
-            // Signing into GOMtv
-            if (!hasSignedIn)
-            {
-                cookieJar = new CookieContainer();
-                signIn();
-            }
+            cookieJar = new CookieContainer();
+
+            // Signing in
+            signIn();
 
             // Now that we have the cookies that we need to authenticate further interaction
             // we should be able to load the Live page and grab the stream from there.
@@ -267,9 +246,6 @@ namespace GOMstreamer
             // Checking to see for a failed sign-in
             if (cookieJar.Count == 0)
                 throw new WebException("Authentication failed. Please check your username and password.");
-
-            // We have signed in correctly and received correct cookies
-            hasSignedIn = true;
         }
 
         private string parseGOXUrl(string liveHTML)
@@ -288,7 +264,7 @@ namespace GOMstreamer
                 throw new WebException("Unable to parse GOX XML URL from the live page.");
             }
 
-            urlFromHTML = urlFromHTML.Replace("\" + playType + \"", "SQTest");
+            urlFromHTML = urlFromHTML.Replace("\" + playType + \"", streamQuality);
             urlFromHTML = Regex.Replace(urlFromHTML, "\"[^;]+;", "");
 
             Regex titleRegex = new Regex("this.title[^;]+;");
@@ -335,6 +311,9 @@ namespace GOMstreamer
             reader.Dispose();
             response.Close();
 
+            if (GOXxml == "1002")
+                throw new WebException("Please purchase a premium ticket to watch higher quality streams. Use the 'SQTest' stream quality instead.");
+
             // Have the XML file, now to parse for the stream link
             Regex goxRegex = new Regex("<REF href=\"([^\"]*)\"/>");
             Match m = goxRegex.Match(GOXxml);
@@ -347,6 +326,15 @@ namespace GOMstreamer
             else
             {
                 throw new WebException("Unable to parse gomcmd URL from the GOX XML file.");
+            }
+
+            // The stream link is much simpler to parse, all we need to do is clean up
+            // the contents of the href in the XML
+            if (streamQuality == "HQ" || streamQuality == "SQ")
+            {
+                streamURL = HttpUtility.UrlDecode(streamURL); // Creating a more readable stream URL
+                streamURL = streamURL.Replace("&amp;", "&");  // Decoding &amp; HTML entity
+                return streamURL;
             }
 
             goxRegex = new Regex("(http%3[Aa].+)&quot;");
