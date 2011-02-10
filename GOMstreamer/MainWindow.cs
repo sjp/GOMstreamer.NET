@@ -194,7 +194,7 @@ namespace GOMstreamer
         private string getStreamURL()
         {
             string gomtvURL = "http://www.gomtv.net";
-            string gomtvLiveURL = gomtvURL + "/2011gstl1/live/";
+            string gomtvLiveURL = gomtvURL + "/2011gslsponsors2/live/";
             cookieJar = new CookieContainer();
 
             // Signing in
