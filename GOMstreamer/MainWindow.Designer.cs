@@ -40,11 +40,20 @@
             this.txtdumploc = new System.Windows.Forms.TextBox();
             this.btnDumpLoc = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
             this.lblStreamURL = new System.Windows.Forms.Label();
             this.txtStreamURL = new System.Windows.Forms.TextBox();
             this.lblQuality = new System.Windows.Forms.Label();
             this.cbQuality = new System.Windows.Forms.ComboBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblKoreanTime = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbMode = new System.Windows.Forms.ComboBox();
+            this.koreanMinute = new System.Windows.Forms.NumericUpDown();
+            this.koreanHour = new System.Windows.Forms.NumericUpDown();
+            this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.koreanMinute)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.koreanHour)).BeginInit();
             this.SuspendLayout();
             // 
             // txtEmail
@@ -136,28 +145,18 @@
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(198, 223);
+            this.btnPlay.Location = new System.Drawing.Point(15, 277);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(179, 50);
+            this.btnPlay.Size = new System.Drawing.Size(359, 39);
             this.btnPlay.TabIndex = 8;
-            this.btnPlay.Text = "Play stream";
+            this.btnPlay.Text = "Go!";
             this.btnPlay.UseVisualStyleBackColor = true;
-            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
-            // 
-            // btnSave
-            // 
-            this.btnSave.Location = new System.Drawing.Point(12, 223);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(180, 50);
-            this.btnSave.TabIndex = 7;
-            this.btnSave.Text = "Save stream";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnPlay.Click += new System.EventHandler(this.btnGo_Click);
             // 
             // lblStreamURL
             // 
             this.lblStreamURL.AutoSize = true;
-            this.lblStreamURL.Location = new System.Drawing.Point(12, 172);
+            this.lblStreamURL.Location = new System.Drawing.Point(12, 225);
             this.lblStreamURL.Name = "lblStreamURL";
             this.lblStreamURL.Size = new System.Drawing.Size(65, 13);
             this.lblStreamURL.TabIndex = 13;
@@ -165,15 +164,15 @@
             // 
             // txtStreamURL
             // 
-            this.txtStreamURL.Location = new System.Drawing.Point(15, 188);
+            this.txtStreamURL.Location = new System.Drawing.Point(15, 241);
             this.txtStreamURL.Name = "txtStreamURL";
-            this.txtStreamURL.Size = new System.Drawing.Size(283, 20);
+            this.txtStreamURL.Size = new System.Drawing.Size(359, 20);
             this.txtStreamURL.TabIndex = 9;
             // 
             // lblQuality
             // 
             this.lblQuality.AutoSize = true;
-            this.lblQuality.Location = new System.Drawing.Point(299, 171);
+            this.lblQuality.Location = new System.Drawing.Point(146, 171);
             this.lblQuality.Name = "lblQuality";
             this.lblQuality.Size = new System.Drawing.Size(75, 13);
             this.lblQuality.TabIndex = 14;
@@ -187,21 +186,109 @@
             "SQTest",
             "SQ",
             "HQ"});
-            this.cbQuality.Location = new System.Drawing.Point(302, 187);
+            this.cbQuality.Location = new System.Drawing.Point(149, 187);
             this.cbQuality.Name = "cbQuality";
-            this.cbQuality.Size = new System.Drawing.Size(75, 21);
+            this.cbQuality.Size = new System.Drawing.Size(118, 21);
             this.cbQuality.TabIndex = 6;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 331);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(389, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 15;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(42, 17);
+            this.statusLabel.Text = "Ready.";
+            // 
+            // lblKoreanTime
+            // 
+            this.lblKoreanTime.AutoSize = true;
+            this.lblKoreanTime.Location = new System.Drawing.Point(270, 171);
+            this.lblKoreanTime.Name = "lblKoreanTime";
+            this.lblKoreanTime.Size = new System.Drawing.Size(113, 13);
+            this.lblKoreanTime.TabIndex = 17;
+            this.lblKoreanTime.Text = "Korean Time (HH:MM)";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 171);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(34, 13);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Mode";
+            // 
+            // cbMode
+            // 
+            this.cbMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMode.FormattingEnabled = true;
+            this.cbMode.Items.AddRange(new object[] {
+            "Play",
+            "Save",
+            "Delayed Save"});
+            this.cbMode.Location = new System.Drawing.Point(12, 187);
+            this.cbMode.Name = "cbMode";
+            this.cbMode.Size = new System.Drawing.Size(131, 21);
+            this.cbMode.TabIndex = 20;
+            this.cbMode.SelectedIndexChanged += new System.EventHandler(this.cbMode_SelectedIndexChanged);
+            // 
+            // koreanMinute
+            // 
+            this.koreanMinute.Location = new System.Drawing.Point(328, 188);
+            this.koreanMinute.Maximum = new decimal(new int[] {
+            59,
+            0,
+            0,
+            0});
+            this.koreanMinute.Name = "koreanMinute";
+            this.koreanMinute.Size = new System.Drawing.Size(49, 20);
+            this.koreanMinute.TabIndex = 22;
+            this.koreanMinute.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // koreanHour
+            // 
+            this.koreanHour.Location = new System.Drawing.Point(273, 188);
+            this.koreanHour.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.koreanHour.Name = "koreanHour";
+            this.koreanHour.Size = new System.Drawing.Size(49, 20);
+            this.koreanHour.TabIndex = 23;
+            this.koreanHour.Value = new decimal(new int[] {
+            18,
+            0,
+            0,
+            0});
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(389, 285);
+            this.ClientSize = new System.Drawing.Size(389, 353);
+            this.Controls.Add(this.koreanHour);
+            this.Controls.Add(this.koreanMinute);
+            this.Controls.Add(this.cbMode);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lblKoreanTime);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.cbQuality);
             this.Controls.Add(this.lblQuality);
             this.Controls.Add(this.txtStreamURL);
             this.Controls.Add(this.lblStreamURL);
-            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnPlay);
             this.Controls.Add(this.btnDumpLoc);
             this.Controls.Add(this.txtdumploc);
@@ -213,10 +300,15 @@
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.lblEmail);
             this.Controls.Add(this.txtEmail);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.Text = "GOMstreamer";
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.koreanMinute)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.koreanHour)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -235,11 +327,17 @@
         private System.Windows.Forms.TextBox txtdumploc;
         private System.Windows.Forms.Button btnDumpLoc;
         private System.Windows.Forms.Button btnPlay;
-        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label lblStreamURL;
         private System.Windows.Forms.TextBox txtStreamURL;
         private System.Windows.Forms.Label lblQuality;
         private System.Windows.Forms.ComboBox cbQuality;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.Label lblKoreanTime;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cbMode;
+        private System.Windows.Forms.NumericUpDown koreanMinute;
+        private System.Windows.Forms.NumericUpDown koreanHour;
     }
 }
 

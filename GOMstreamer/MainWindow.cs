@@ -11,12 +11,16 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
+        Version VERSION = new Version("0.5.0");
         string email = "";
         string pass = "";
         string vlcloc = "";
         string dumploc = "";
         string streamloc = "";
         string streamQuality = "SQTest";
+        string mode = "Play";
+        TimeSpan timeToWait;
+        Timer streamDelayTimer = new Timer();
         CookieContainer cookieJar = new CookieContainer();
 
         public MainWindow()
@@ -31,6 +35,13 @@ namespace GOMstreamer
             // Setting default quality to SQTest
             cbQuality.SelectedIndex = 0;
             streamQuality = cbQuality.SelectedItem.ToString();
+
+            // Setting default execution mode to 'Play'
+            cbMode.SelectedIndex = 0;
+            mode = cbMode.SelectedItem.ToString();
+
+            // Disabling to avoid confusion, will enable once a stream URL has been collected
+            txtStreamURL.Enabled = false;
 
             // Checking for the Program Files folder location on the OS
             string progfiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
@@ -86,14 +97,21 @@ namespace GOMstreamer
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnGo_Click(object sender, EventArgs e)
         {
             email = txtEmail.Text;
             pass = txtPassword.Text;
             vlcloc = txtVLCloc.Text;
             dumploc = txtdumploc.Text;
             streamQuality = cbQuality.SelectedItem.ToString();
+            mode = cbMode.SelectedItem.ToString();
             string dumplocdir = dumploc.Substring(0, dumploc.LastIndexOf("\\"));
+            
+            // Getting rid of the old timer if the button was pressed more than once
+            // otherwise we start counting down by more than 1 second at a time
+            streamDelayTimer.Dispose();
+            streamDelayTimer = new Timer();
+            timeToWait = new TimeSpan();
 
             // Catch any exceptions and display the message if they're encountered.
             try
@@ -116,39 +134,26 @@ namespace GOMstreamer
                         throw new Exception();
                 }
 
-                saveStream();
+                // Delaying execution until target KST if mode is set to 'Delayed Save'
+                if (mode == "Delayed Save")
+                {
+                    delayStream();
+                }
+                else
+                {
+                    // Continuing execution...
+                    grabStream();
+                }
             }
             catch (WebException we)
             {
                 MessageBox.Show(we.Message, "GOMstreamer error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                statusLabel.Text = "Ready.";
             }
             catch (Exception ex) { }
         }
         
-        private void btnPlay_Click(object sender, EventArgs e)
-        {
-            email = txtEmail.Text;
-            pass = txtPassword.Text;
-            vlcloc = txtVLCloc.Text;
-            streamQuality = cbQuality.SelectedItem.ToString();
-
-            // Catch any exceptions and display the message if they're encountered.
-            try
-            {
-                if (! File.Exists(vlcloc))
-                {
-                    throw new WebException("Please choose a valid VLC location.");
-                }
-
-                playStream();
-            }
-            catch (WebException we)
-            {
-                MessageBox.Show(we.Message, "GOMstreamer error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        
-        private void saveStream()
+        private void grabStream()
         {
             dumploc = txtdumploc.Text;
             string streamURL = getStreamURL();
@@ -157,44 +162,156 @@ namespace GOMstreamer
             if (txtStreamURL.Text != streamURL)
             {
                 txtStreamURL.Text = streamURL;
+                txtStreamURL.Enabled = true;
             }
 
             // Run VLC with the correct arguments
-            string vlcargs = "--http-caching=30000 " + streamURL +
-                             " :demux=dump :demuxdump-file=\"" + dumploc + "\"" +
-                             " vlc://quit";
+            statusLabel.Text = "Executing VLC.";
+
+            string vlcargs = streamURL + " --http-caching=30000";
+
+            if (mode != "Play")
+                vlcargs += " --demux=dump --demuxdump-file=\"" + dumploc + "\"";
+
+            vlcargs += " vlc://quit";
+
             Process vlc = new Process();
             vlc.StartInfo.UseShellExecute = true;
             vlc.StartInfo.FileName = vlcloc;
             vlc.StartInfo.Arguments = vlcargs;
             vlc.Start();
+
+            // Resetting the label as all execution has been done
+            statusLabel.Text = "Ready.";
         }
 
-        private void playStream()
+        private void delayStream()
         {
-            string streamURL = getStreamURL();
+            // Parsing time from Korean time input
+            int hour = (int) koreanHour.Value;
+            int minute = (int) koreanMinute.Value;
 
-            // If the user has changed the text field, update it with the correct value
-            if (txtStreamURL.Text != streamURL)
+            DateTime current_utc_time = DateTime.UtcNow;
+            DateTime current_korean_time = current_utc_time.AddHours(9); // Korea is GMT+9
+            DateTime target_korean_time = new DateTime(current_korean_time.Year,
+                                                       current_korean_time.Month,
+                                                       current_korean_time.Day,
+                                                       hour,
+                                                       minute,
+                                                       0);
+
+            // If we find that the current time in Korea is ahead of what we expect
+            // then add a day to ensure that we don't end up with negative time or
+            // a delay period greater than 24h
+            if (current_korean_time > target_korean_time)
             {
-                txtStreamURL.Text = streamURL;
-
+                target_korean_time = new DateTime(current_korean_time.Year,
+                                                  current_korean_time.Month,
+                                                  current_korean_time.Day + 1,
+                                                  hour,
+                                                  minute,
+                                                  0);
             }
 
-            // Run VLC with the correct arguments
-            string vlcargs = "--http-caching=30000 " + streamURL +
-                             " vlc://quit";
-            Process vlc = new Process();
-            vlc.StartInfo.UseShellExecute = true;
-            vlc.StartInfo.FileName = vlcloc;
-            vlc.StartInfo.Arguments = vlcargs;
-            vlc.Start();
+            timeToWait = (target_korean_time - current_korean_time);
+            streamDelayTimer.Interval = 1000;
+            streamDelayTimer.Tick += new EventHandler(OnDelayTick);
+            streamDelayTimer.Enabled = true;
+        }
+
+        private void OnDelayTick(Object source, EventArgs e)
+        {
+            // Kill the timer if the time has been met
+            if (timeToWait.TotalSeconds <= 0)
+            {
+                streamDelayTimer.Enabled = false;
+
+                // Attempt to go ahead and grab the stream
+                try
+                {
+                    // Continuing execution...
+                    grabStream();
+                }
+                catch (WebException we)
+                {
+                    MessageBox.Show(we.Message, "GOMstreamer error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    statusLabel.Text = "Ready.";
+                }
+                catch (Exception ex) { }
+            }
+            else
+            {
+                // Subtracting the tick length, in this case 0h, 0m, 1s
+                timeToWait -= new TimeSpan(0, 0, 1);
+
+                string timeText = "";
+                timeText += timeToWait.Hours > 0 ? " " + timeToWait.Hours + "h" : "";
+                timeText += timeToWait.Minutes > 0 ? " " + timeToWait.Minutes + "m" : "";
+                timeText += timeToWait.Seconds > 0 ? " " + timeToWait.Seconds + "s" : "";
+
+                // Update the label with the current remaining time
+                statusLabel.Text = "Waiting" + timeText + ".";
+            }
+        }
+
+        private void checkForUpdate()
+        {
+            statusLabel.Text = "Checking for updates.";
+
+            string versionURL = "http://sjp.co.nz/projects/gomstreamer/version.txt";
+            HttpWebRequest versionReq = (HttpWebRequest)WebRequest.Create(versionURL);
+            versionReq.Method = "GET";
+            versionReq.Timeout = 15000;  // Ensuring no long wait if the webserver is down
+            HttpWebResponse versionResponse = (HttpWebResponse)versionReq.GetResponse();  // Grabbing live page
+            StreamReader reader = new StreamReader(versionResponse.GetResponseStream(), Encoding.UTF8);
+            string response = reader.ReadToEnd();
+            reader.Close();
+            reader.Dispose();
+            versionResponse.Close();
+
+            Version latestVersion = new Version(response.Trim());
+
+            if (latestVersion > VERSION)
+            {
+                MessageBox.Show("Your version of GOMstreamer is " +
+                                VERSION.ToString() + ".\n\n" +
+                                "The latest version is " +
+                                latestVersion.ToString() + ".\n\n" +
+                                "Download the latest version from http://sjp.co.nz/projects/gomstreamer/",
+                                "GOMstreamer Update Available",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information,
+                                MessageBoxDefaultButton.Button1);
+            }
+
+        }
+
+        private string getSeasonURL()
+        {
+            statusLabel.Text = "Collecting the latest season URL.";
+
+            string seasonURL = "http://sjp.co.nz/projects/gomstreamer/season.txt";
+            HttpWebRequest seasonReq = (HttpWebRequest)WebRequest.Create(seasonURL);
+            seasonReq.Method = "GET";
+            seasonReq.Timeout = 15000;  // Ensuring no long wait if the webserver is down
+            HttpWebResponse seasonResponse = (HttpWebResponse)seasonReq.GetResponse();  // Grabbing live page
+            StreamReader reader = new StreamReader(seasonResponse.GetResponseStream(), Encoding.UTF8);
+            string response = reader.ReadToEnd();
+            reader.Close();
+            reader.Dispose();
+            seasonResponse.Close();
+
+            string currentSeasonURL = response.Trim();
+            return currentSeasonURL;
         }
         
         private string getStreamURL()
         {
+            // Checking for an update to GOMstreamer
+            checkForUpdate();
+            
             string gomtvURL = "http://www.gomtv.net";
-            string gomtvLiveURL = gomtvURL + "/2011gslsponsors2/live/";
+            string gomtvLiveURL = gomtvURL + getSeasonURL();
             cookieJar = new CookieContainer();
 
             // Signing in
@@ -202,6 +319,8 @@ namespace GOMstreamer
 
             // Now that we have the cookies that we need to authenticate further interaction
             // we should be able to load the Live page and grab the stream from there.
+            statusLabel.Text = "Grabbing the 'Live' page.";
+
             HttpWebRequest liveReq = (HttpWebRequest)WebRequest.Create(gomtvLiveURL);
             liveReq.Method = "GET";
             liveReq.CookieContainer = cookieJar;
@@ -221,6 +340,8 @@ namespace GOMstreamer
 
         private void signIn()
         {
+            statusLabel.Text = "Signing in.";
+
             string gomtvURL = "http://www.gomtv.net";
             string gomtvSignInURL = gomtvURL + "/user/loginProcess.gom";
             string httpEmail = HttpUtility.UrlEncode(email);  // The email & password will have special characters that need decoding
@@ -250,6 +371,8 @@ namespace GOMstreamer
 
         private string parseGOXUrl(string liveHTML)
         {
+            statusLabel.Text = "Parsing the 'Live' page for the GOX XML link.";
+
             // The live page has been collected. Now to parse for the stream via regex
             Regex linkRegex = new Regex("http://www.gomtv.net/gox[^;]+;");
             Match m = linkRegex.Match(liveHTML);
@@ -299,6 +422,8 @@ namespace GOMstreamer
 
         private string parseHTTPStream(string goxurl)
         {
+            statusLabel.Text = "Grabbing the GOX XML file.";
+
             // Now we have the link to the XML file that contains the actual stream link
             // Grabbing it now
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(goxurl);
@@ -315,6 +440,8 @@ namespace GOMstreamer
                 throw new WebException("Please purchase a premium ticket to watch higher quality streams. Use the 'SQTest' stream quality instead.");
 
             // Have the XML file, now to parse for the stream link
+            statusLabel.Text = "Parsing the GOX XML file for the HTTP stream URL.";
+
             Regex goxRegex = new Regex("<REF href=\"([^\"]*)\"/>");
             Match m = goxRegex.Match(GOXxml);
             string streamURL = "";
@@ -353,6 +480,35 @@ namespace GOMstreamer
             streamURL = streamURL.Replace("&amp;", "&");  // Decoding &amp; HTML entity
             streamURL = streamURL.Replace("&quot;", "");  // Removing an unnecessary HTML entity
             return streamURL;
+        }
+
+        private void cbMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            mode = cbMode.SelectedItem.ToString();
+
+            // Enabling and disabling controls that relate to the mode
+            // of execution that is currently selected
+            if (mode == "Delayed Save")
+            {
+                koreanHour.Enabled = true;
+                koreanMinute.Enabled = true;
+            }
+            else
+            {
+                koreanHour.Enabled = false;
+                koreanMinute.Enabled = false;
+            }
+
+            if (mode != "Play")
+            {
+                txtdumploc.Enabled = true;
+                btnDumpLoc.Enabled = true;
+            }
+            else
+            {
+                txtdumploc.Enabled = false;
+                btnDumpLoc.Enabled = false;
+            }
         }
     }
 }
