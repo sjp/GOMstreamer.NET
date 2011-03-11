@@ -11,7 +11,7 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.5.0");
+        Version VERSION = new Version("0.6.0");
         string email = "";
         string pass = "";
         string vlcloc = "";
@@ -509,6 +509,12 @@ namespace GOMstreamer
                 txtdumploc.Enabled = false;
                 btnDumpLoc.Enabled = false;
             }
+        }
+
+        private void btnAbout_Click(object sender, EventArgs e)
+        {
+            AboutBox gsAbout = new AboutBox();
+            gsAbout.Show();
         }
     }
 }

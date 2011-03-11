@@ -39,7 +39,7 @@
             this.lblStream = new System.Windows.Forms.Label();
             this.txtdumploc = new System.Windows.Forms.TextBox();
             this.btnDumpLoc = new System.Windows.Forms.Button();
-            this.btnPlay = new System.Windows.Forms.Button();
+            this.btnGo = new System.Windows.Forms.Button();
             this.lblStreamURL = new System.Windows.Forms.Label();
             this.txtStreamURL = new System.Windows.Forms.TextBox();
             this.lblQuality = new System.Windows.Forms.Label();
@@ -51,6 +51,7 @@
             this.cbMode = new System.Windows.Forms.ComboBox();
             this.koreanMinute = new System.Windows.Forms.NumericUpDown();
             this.koreanHour = new System.Windows.Forms.NumericUpDown();
+            this.btnAbout = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.koreanMinute)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.koreanHour)).BeginInit();
@@ -143,15 +144,15 @@
             this.btnDumpLoc.UseVisualStyleBackColor = true;
             this.btnDumpLoc.Click += new System.EventHandler(this.btnDumpLoc_Click);
             // 
-            // btnPlay
+            // btnGo
             // 
-            this.btnPlay.Location = new System.Drawing.Point(15, 277);
-            this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(359, 39);
-            this.btnPlay.TabIndex = 8;
-            this.btnPlay.Text = "Go!";
-            this.btnPlay.UseVisualStyleBackColor = true;
-            this.btnPlay.Click += new System.EventHandler(this.btnGo_Click);
+            this.btnGo.Location = new System.Drawing.Point(15, 277);
+            this.btnGo.Name = "btnGo";
+            this.btnGo.Size = new System.Drawing.Size(359, 39);
+            this.btnGo.TabIndex = 12;
+            this.btnGo.Text = "Go!";
+            this.btnGo.UseVisualStyleBackColor = true;
+            this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
             // 
             // lblStreamURL
             // 
@@ -166,8 +167,8 @@
             // 
             this.txtStreamURL.Location = new System.Drawing.Point(15, 241);
             this.txtStreamURL.Name = "txtStreamURL";
-            this.txtStreamURL.Size = new System.Drawing.Size(359, 20);
-            this.txtStreamURL.TabIndex = 9;
+            this.txtStreamURL.Size = new System.Drawing.Size(283, 20);
+            this.txtStreamURL.TabIndex = 10;
             // 
             // lblQuality
             // 
@@ -189,7 +190,7 @@
             this.cbQuality.Location = new System.Drawing.Point(149, 187);
             this.cbQuality.Name = "cbQuality";
             this.cbQuality.Size = new System.Drawing.Size(118, 21);
-            this.cbQuality.TabIndex = 6;
+            this.cbQuality.TabIndex = 7;
             // 
             // statusStrip1
             // 
@@ -237,7 +238,7 @@
             this.cbMode.Location = new System.Drawing.Point(12, 187);
             this.cbMode.Name = "cbMode";
             this.cbMode.Size = new System.Drawing.Size(131, 21);
-            this.cbMode.TabIndex = 20;
+            this.cbMode.TabIndex = 6;
             this.cbMode.SelectedIndexChanged += new System.EventHandler(this.cbMode_SelectedIndexChanged);
             // 
             // koreanMinute
@@ -250,7 +251,7 @@
             0});
             this.koreanMinute.Name = "koreanMinute";
             this.koreanMinute.Size = new System.Drawing.Size(49, 20);
-            this.koreanMinute.TabIndex = 22;
+            this.koreanMinute.TabIndex = 9;
             this.koreanMinute.Value = new decimal(new int[] {
             10,
             0,
@@ -267,18 +268,29 @@
             0});
             this.koreanHour.Name = "koreanHour";
             this.koreanHour.Size = new System.Drawing.Size(49, 20);
-            this.koreanHour.TabIndex = 23;
+            this.koreanHour.TabIndex = 8;
             this.koreanHour.Value = new decimal(new int[] {
             18,
             0,
             0,
             0});
             // 
+            // btnAbout
+            // 
+            this.btnAbout.Location = new System.Drawing.Point(304, 238);
+            this.btnAbout.Name = "btnAbout";
+            this.btnAbout.Size = new System.Drawing.Size(73, 23);
+            this.btnAbout.TabIndex = 11;
+            this.btnAbout.Text = "About";
+            this.btnAbout.UseVisualStyleBackColor = true;
+            this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(389, 353);
+            this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.koreanHour);
             this.Controls.Add(this.koreanMinute);
             this.Controls.Add(this.cbMode);
@@ -289,7 +301,7 @@
             this.Controls.Add(this.lblQuality);
             this.Controls.Add(this.txtStreamURL);
             this.Controls.Add(this.lblStreamURL);
-            this.Controls.Add(this.btnPlay);
+            this.Controls.Add(this.btnGo);
             this.Controls.Add(this.btnDumpLoc);
             this.Controls.Add(this.txtdumploc);
             this.Controls.Add(this.lblStream);
@@ -326,7 +338,7 @@
         private System.Windows.Forms.Label lblStream;
         private System.Windows.Forms.TextBox txtdumploc;
         private System.Windows.Forms.Button btnDumpLoc;
-        private System.Windows.Forms.Button btnPlay;
+        private System.Windows.Forms.Button btnGo;
         private System.Windows.Forms.Label lblStreamURL;
         private System.Windows.Forms.TextBox txtStreamURL;
         private System.Windows.Forms.Label lblQuality;
@@ -338,6 +350,7 @@
         private System.Windows.Forms.ComboBox cbMode;
         private System.Windows.Forms.NumericUpDown koreanMinute;
         private System.Windows.Forms.NumericUpDown koreanHour;
+        private System.Windows.Forms.Button btnAbout;
     }
 }
 
