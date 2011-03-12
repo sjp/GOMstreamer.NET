@@ -148,7 +148,7 @@
             // 
             this.btnGo.Location = new System.Drawing.Point(15, 277);
             this.btnGo.Name = "btnGo";
-            this.btnGo.Size = new System.Drawing.Size(359, 39);
+            this.btnGo.Size = new System.Drawing.Size(362, 39);
             this.btnGo.TabIndex = 12;
             this.btnGo.Text = "Go!";
             this.btnGo.UseVisualStyleBackColor = true;

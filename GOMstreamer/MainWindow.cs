@@ -173,7 +173,7 @@ namespace GOMstreamer
             if (mode != "Play")
                 vlcargs += " --demux=dump --demuxdump-file=\"" + dumploc + "\"";
 
-            vlcargs += " vlc://quit";
+            vlcargs += " --http-user-agent=\"GomPlayer 2, 1, 28, 5039 (ENG)\" vlc://quit";
 
             Process vlc = new Process();
             vlc.StartInfo.UseShellExecute = true;
