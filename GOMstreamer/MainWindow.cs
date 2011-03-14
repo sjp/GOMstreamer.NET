@@ -65,6 +65,9 @@ namespace GOMstreamer
 
             // Checking for an update to GOMstreamer
             checkForUpdate();
+
+            // Resetting label once update check has been made
+            statusLabel.Text = "Ready.";
         }
         
         private void btnDumpLoc_Click(object sender, EventArgs e)
@@ -183,7 +186,7 @@ namespace GOMstreamer
             if (mode != "Play")
                 vlcargs += " --demux=dump --demuxdump-file=\"" + dumploc + "\"";
 
-            vlcargs += " --http-user-agent=\"GomPlayer 2, 1, 28, 5039 (ENG)\" vlc://quit";
+            vlcargs += " --http-user-agent KPeerClient vlc://quit";
 
             Process vlc = new Process();
             vlc.StartInfo.UseShellExecute = true;
