@@ -22,6 +22,7 @@ namespace GOMstreamer
         TimeSpan timeToWait;
         Timer streamDelayTimer = new Timer();
         CookieContainer cookieJar = new CookieContainer();
+        bool isMinimised = false;
 
         public MainWindow()
         {
@@ -61,6 +62,9 @@ namespace GOMstreamer
             // Set the default save location to be dump.ogm on the Desktop
             txtdumploc.Text = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\dump.ogm";
             dumploc = txtdumploc.Text;
+
+            // Checking for an update to GOMstreamer
+            checkForUpdate();
         }
         
         private void btnDumpLoc_Click(object sender, EventArgs e)
@@ -137,6 +141,12 @@ namespace GOMstreamer
                 // Delaying execution until target KST if mode is set to 'Delayed Save'
                 if (mode == "Delayed Save")
                 {
+                    this.WindowState = FormWindowState.Minimized;
+                    this.ShowInTaskbar = false;
+                    gomNotifyIcon.BalloonTipTitle = "GOMstreamer";
+                    gomNotifyIcon.BalloonTipText = "GOMstreamer is still running, but will wait until the scheduled time to begin recording the stream.";
+                    gomNotifyIcon.ShowBalloonTip(3000);
+                    isMinimised = true;
                     delayStream();
                 }
                 else
@@ -221,6 +231,13 @@ namespace GOMstreamer
 
         private void OnDelayTick(Object source, EventArgs e)
         {
+            // Restoring from tray prior to recording
+            if (timeToWait.TotalSeconds <= 60 && isMinimised)
+            {
+                this.ShowInTaskbar = true;
+                this.WindowState = FormWindowState.Normal;
+            }
+            
             // Kill the timer if the time has been met
             if (timeToWait.TotalSeconds <= 0)
             {
@@ -251,6 +268,7 @@ namespace GOMstreamer
 
                 // Update the label with the current remaining time
                 statusLabel.Text = "Waiting" + timeText + ".";
+                gomNotifyIcon.Text = "GOMstreamer. Waiting" + timeText + ".";
             }
         }
 
@@ -306,10 +324,7 @@ namespace GOMstreamer
         }
         
         private string getStreamURL()
-        {
-            // Checking for an update to GOMstreamer
-            checkForUpdate();
-            
+        {            
             string gomtvURL = "http://www.gomtv.net";
             string gomtvLiveURL = gomtvURL + getSeasonURL();
             cookieJar = new CookieContainer();
@@ -515,6 +530,13 @@ namespace GOMstreamer
         {
             AboutBox gsAbout = new AboutBox();
             gsAbout.Show();
+        }
+
+        private void gomNotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            isMinimised = false;
+            this.ShowInTaskbar = true;
+            this.WindowState = FormWindowState.Normal;
         }
     }
 }

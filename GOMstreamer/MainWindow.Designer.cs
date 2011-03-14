@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.lblEmail = new System.Windows.Forms.Label();
@@ -52,6 +53,7 @@
             this.koreanMinute = new System.Windows.Forms.NumericUpDown();
             this.koreanHour = new System.Windows.Forms.NumericUpDown();
             this.btnAbout = new System.Windows.Forms.Button();
+            this.gomNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.koreanMinute)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.koreanHour)).BeginInit();
@@ -285,6 +287,14 @@
             this.btnAbout.UseVisualStyleBackColor = true;
             this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
             // 
+            // gomNotifyIcon
+            // 
+            this.gomNotifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.gomNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("gomNotifyIcon.Icon")));
+            this.gomNotifyIcon.Text = "GOMstreamer";
+            this.gomNotifyIcon.Visible = true;
+            this.gomNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gomNotifyIcon_MouseDoubleClick);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -351,6 +361,7 @@
         private System.Windows.Forms.NumericUpDown koreanMinute;
         private System.Windows.Forms.NumericUpDown koreanHour;
         private System.Windows.Forms.Button btnAbout;
+        private System.Windows.Forms.NotifyIcon gomNotifyIcon;
     }
 }
 
