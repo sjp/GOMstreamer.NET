@@ -11,14 +11,14 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.6.0");
+        Version VERSION = new Version("0.6.1");
         string email = "";
         string pass = "";
         string vlcloc = "";
         string dumploc = "";
         string streamloc = "";
         string streamQuality = "SQTest";
-        string mode = "Play";
+        string mode = "Save";
         TimeSpan timeToWait;
         Timer streamDelayTimer = new Timer();
         CookieContainer cookieJar = new CookieContainer();
@@ -37,8 +37,9 @@ namespace GOMstreamer
             cbQuality.SelectedIndex = 0;
             streamQuality = cbQuality.SelectedItem.ToString();
 
-            // Setting default execution mode to 'Play'
-            cbMode.SelectedIndex = 0;
+            // Setting default execution mode to 'Save'
+            // Will set this back to 'Play' if I can pipe output to VLC correctly
+            cbMode.SelectedIndex = 1;
             mode = cbMode.SelectedItem.ToString();
 
             // Disabling to avoid confusion, will enable once a stream URL has been collected
@@ -179,20 +180,22 @@ namespace GOMstreamer
             }
 
             // Run VLC with the correct arguments
-            statusLabel.Text = "Executing VLC.";
+            statusLabel.Text = "Executing wget.";
 
-            string vlcargs = streamURL + " --http-caching=30000";
+            string wgetCmd = "wget.exe";
+            string wgetArgs = "";
+            string combinedCmd = "";
 
             if (mode != "Play")
-                vlcargs += " --demux=dump --demuxdump-file=\"" + dumploc + "\"";
+            {
+                wgetArgs +=  "-U KPeerClient " + streamURL + " -O \"" + dumploc + "\"";
+                combinedCmd = wgetArgs;
+            }
 
-            vlcargs += " --http-user-agent KPeerClient vlc://quit";
-
-            Process vlc = new Process();
-            vlc.StartInfo.UseShellExecute = true;
-            vlc.StartInfo.FileName = vlcloc;
-            vlc.StartInfo.Arguments = vlcargs;
-            vlc.Start();
+            Process cmd = new Process();
+            cmd.StartInfo.FileName = wgetCmd;
+            cmd.StartInfo.Arguments = combinedCmd;
+            cmd.Start();
 
             // Resetting the label as all execution has been done
             statusLabel.Text = "Ready.";
@@ -521,11 +524,13 @@ namespace GOMstreamer
             {
                 txtdumploc.Enabled = true;
                 btnDumpLoc.Enabled = true;
+                btnGo.Enabled = true;
             }
             else
             {
                 txtdumploc.Enabled = false;
                 btnDumpLoc.Enabled = false;
+                btnGo.Enabled = false;
             }
         }
 
