@@ -11,19 +11,19 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.6.1");
+        Version VERSION = new Version("0.6.2");
         string email = "";
         string pass = "";
         string vlcloc = "";
         string dumploc = "";
         string streamloc = "";
-        string streamQuality = "SQTest";
+        string streamQuality = "SQ";
         string mode = "Save";
         TimeSpan timeToWait;
         Timer streamDelayTimer = new Timer();
         CookieContainer cookieJar = new CookieContainer();
         bool isMinimised = false;
-
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -474,15 +474,6 @@ namespace GOMstreamer
             else
             {
                 throw new WebException("Unable to parse gomcmd URL from the GOX XML file.");
-            }
-
-            // The stream link is much simpler to parse, all we need to do is clean up
-            // the contents of the href in the XML
-            if (streamQuality == "HQ" || streamQuality == "SQ")
-            {
-                streamURL = HttpUtility.UrlDecode(streamURL); // Creating a more readable stream URL
-                streamURL = streamURL.Replace("&amp;", "&");  // Decoding &amp; HTML entity
-                return streamURL;
             }
 
             goxRegex = new Regex("(http%3[Aa].+)&quot;");

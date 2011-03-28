@@ -186,7 +186,6 @@
             this.cbQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbQuality.FormattingEnabled = true;
             this.cbQuality.Items.AddRange(new object[] {
-            "SQTest",
             "SQ",
             "HQ"});
             this.cbQuality.Location = new System.Drawing.Point(149, 187);
