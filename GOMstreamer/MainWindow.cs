@@ -482,6 +482,7 @@ namespace GOMstreamer
             {
                 streamURL = HttpUtility.UrlDecode(streamURL); // Creating a more readable stream URL
                 streamURL = streamURL.Replace("&amp;", "&");  // Decoding &amp; HTML entity
+                streamURL = streamURL.Replace(" ", "");  // Remove White Spaces, thanks Rolf
                 return streamURL;
             }
 
