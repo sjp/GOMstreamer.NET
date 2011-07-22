@@ -11,7 +11,7 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.6.3");
+        Version VERSION = new Version("0.7.0");
         string email = "";
         string pass = "";
         string vlcloc = "";
@@ -310,15 +310,55 @@ namespace GOMstreamer
 
         }
 
-        private string getSeasonURL()
+        private string getSeasonURL(string gomtvURL)
         {
             statusLabel.Text = "Collecting the latest season URL.";
+
+            string seasonURL = getSeasonURL_gom(gomtvURL);
+            return seasonURL;
+        }
+
+        private string getSeasonURL_gom(string gomtvURL)
+        {
+            statusLabel.Text = "Collecting the latest season URL from GOMtv.";
+
+            HttpWebRequest homeReq = (HttpWebRequest)WebRequest.Create(gomtvURL);
+            homeReq.Method = "GET";
+            homeReq.Timeout = 15000;  // Ensuring no long wait if the webserver is down
+            HttpWebResponse homeResponse = (HttpWebResponse)homeReq.GetResponse();  // Grabbing live page
+            StreamReader reader = new StreamReader(homeResponse.GetResponseStream(), Encoding.UTF8);
+            string response = reader.ReadToEnd();
+            reader.Close();
+            reader.Dispose();
+            homeResponse.Close();
+
+            // The home page has been collected. Now to parse for the current season
+            Regex linkRegex = new Regex("<a href=\"([^\"]*)\" class=\"golive_btn");
+            Match m = linkRegex.Match(response);
+            string seasonURL = "";
+
+            if (m.Success)
+            {
+                seasonURL = m.Groups[1].Value;
+            }
+            else
+            {
+                seasonURL = getSeasonURL_sjp(gomtvURL);
+            }
+
+            string currentSeasonURL = gomtvURL + seasonURL;
+            return currentSeasonURL;
+        }
+
+        private string getSeasonURL_sjp(string gomtvURL)
+        {
+            statusLabel.Text = "Collecting the latest season URL from sjp.co.nz.";
 
             string seasonURL = "http://sjp.co.nz/projects/gomstreamer/season.txt";
             HttpWebRequest seasonReq = (HttpWebRequest)WebRequest.Create(seasonURL);
             seasonReq.Method = "GET";
             seasonReq.Timeout = 15000;  // Ensuring no long wait if the webserver is down
-            HttpWebResponse seasonResponse = (HttpWebResponse)seasonReq.GetResponse();  // Grabbing live page
+            HttpWebResponse seasonResponse = (HttpWebResponse)seasonReq.GetResponse();  // Grabbing season txt file
             StreamReader reader = new StreamReader(seasonResponse.GetResponseStream(), Encoding.UTF8);
             string response = reader.ReadToEnd();
             reader.Close();
@@ -332,7 +372,7 @@ namespace GOMstreamer
         private string getStreamURL()
         {            
             string gomtvURL = "http://www.gomtv.net";
-            string gomtvLiveURL = gomtvURL + getSeasonURL();
+            string gomtvLiveURL = getSeasonURL(gomtvURL);
             cookieJar = new CookieContainer();
 
             // Signing in
