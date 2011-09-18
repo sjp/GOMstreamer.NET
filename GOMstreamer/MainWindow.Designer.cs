@@ -30,121 +30,121 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.txtEmail = new System.Windows.Forms.TextBox();
-            this.lblEmail = new System.Windows.Forms.Label();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.lblVLCloc = new System.Windows.Forms.Label();
-            this.txtVLCloc = new System.Windows.Forms.TextBox();
-            this.btnVLCLoc = new System.Windows.Forms.Button();
-            this.lblStream = new System.Windows.Forms.Label();
-            this.txtdumploc = new System.Windows.Forms.TextBox();
-            this.btnDumpLoc = new System.Windows.Forms.Button();
+            this.txtEmailAddress = new System.Windows.Forms.TextBox();
+            this.lblEmailAddress = new System.Windows.Forms.Label();
+            this.lblUserPassword = new System.Windows.Forms.Label();
+            this.txtUserPassword = new System.Windows.Forms.TextBox();
+            this.lblVlcLocation = new System.Windows.Forms.Label();
+            this.txtVlcLocation = new System.Windows.Forms.TextBox();
+            this.btnVlcLocation = new System.Windows.Forms.Button();
+            this.lblDumpLocation = new System.Windows.Forms.Label();
+            this.txtDumpLocation = new System.Windows.Forms.TextBox();
+            this.btnDumpLocation = new System.Windows.Forms.Button();
             this.btnGo = new System.Windows.Forms.Button();
             this.lblStreamURL = new System.Windows.Forms.Label();
             this.txtStreamURL = new System.Windows.Forms.TextBox();
-            this.lblQuality = new System.Windows.Forms.Label();
-            this.cbQuality = new System.Windows.Forms.ComboBox();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lblStreamQuality = new System.Windows.Forms.Label();
+            this.cbStreamQuality = new System.Windows.Forms.ComboBox();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblKoreanTime = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblMode = new System.Windows.Forms.Label();
             this.cbMode = new System.Windows.Forms.ComboBox();
-            this.koreanMinute = new System.Windows.Forms.NumericUpDown();
-            this.koreanHour = new System.Windows.Forms.NumericUpDown();
+            this.frmKoreanMinute = new System.Windows.Forms.NumericUpDown();
+            this.frmKoreanHour = new System.Windows.Forms.NumericUpDown();
             this.btnAbout = new System.Windows.Forms.Button();
             this.gomNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.koreanMinute)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.koreanHour)).BeginInit();
+            this.statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.frmKoreanMinute)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.frmKoreanHour)).BeginInit();
             this.SuspendLayout();
             // 
-            // txtEmail
+            // txtEmailAddress
             // 
-            this.txtEmail.Location = new System.Drawing.Point(12, 26);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(180, 20);
-            this.txtEmail.TabIndex = 0;
+            this.txtEmailAddress.Location = new System.Drawing.Point(12, 26);
+            this.txtEmailAddress.Name = "txtEmailAddress";
+            this.txtEmailAddress.Size = new System.Drawing.Size(180, 20);
+            this.txtEmailAddress.TabIndex = 0;
             // 
-            // lblEmail
+            // lblEmailAddress
             // 
-            this.lblEmail.AutoSize = true;
-            this.lblEmail.Location = new System.Drawing.Point(9, 10);
-            this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(73, 13);
-            this.lblEmail.TabIndex = 1;
-            this.lblEmail.Text = "Email Address";
+            this.lblEmailAddress.AutoSize = true;
+            this.lblEmailAddress.Location = new System.Drawing.Point(9, 10);
+            this.lblEmailAddress.Name = "lblEmailAddress";
+            this.lblEmailAddress.Size = new System.Drawing.Size(73, 13);
+            this.lblEmailAddress.TabIndex = 1;
+            this.lblEmailAddress.Text = "Email Address";
             // 
-            // lblPassword
+            // lblUserPassword
             // 
-            this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(195, 9);
-            this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(53, 13);
-            this.lblPassword.TabIndex = 2;
-            this.lblPassword.Text = "Password";
+            this.lblUserPassword.AutoSize = true;
+            this.lblUserPassword.Location = new System.Drawing.Point(195, 9);
+            this.lblUserPassword.Name = "lblUserPassword";
+            this.lblUserPassword.Size = new System.Drawing.Size(53, 13);
+            this.lblUserPassword.TabIndex = 2;
+            this.lblUserPassword.Text = "Password";
             // 
-            // txtPassword
+            // txtUserPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(198, 26);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(179, 20);
-            this.txtPassword.TabIndex = 1;
-            this.txtPassword.UseSystemPasswordChar = true;
+            this.txtUserPassword.Location = new System.Drawing.Point(198, 26);
+            this.txtUserPassword.Name = "txtUserPassword";
+            this.txtUserPassword.Size = new System.Drawing.Size(179, 20);
+            this.txtUserPassword.TabIndex = 1;
+            this.txtUserPassword.UseSystemPasswordChar = true;
             // 
-            // lblVLCloc
+            // lblVlcLocation
             // 
-            this.lblVLCloc.AutoSize = true;
-            this.lblVLCloc.Location = new System.Drawing.Point(9, 62);
-            this.lblVLCloc.Name = "lblVLCloc";
-            this.lblVLCloc.Size = new System.Drawing.Size(71, 13);
-            this.lblVLCloc.TabIndex = 4;
-            this.lblVLCloc.Text = "VLC Location";
+            this.lblVlcLocation.AutoSize = true;
+            this.lblVlcLocation.Location = new System.Drawing.Point(9, 62);
+            this.lblVlcLocation.Name = "lblVlcLocation";
+            this.lblVlcLocation.Size = new System.Drawing.Size(71, 13);
+            this.lblVlcLocation.TabIndex = 4;
+            this.lblVlcLocation.Text = "VLC Location";
             // 
-            // txtVLCloc
+            // txtVlcLocation
             // 
-            this.txtVLCloc.Location = new System.Drawing.Point(12, 78);
-            this.txtVLCloc.Name = "txtVLCloc";
-            this.txtVLCloc.Size = new System.Drawing.Size(286, 20);
-            this.txtVLCloc.TabIndex = 2;
-            this.txtVLCloc.Text = "C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe";
+            this.txtVlcLocation.Location = new System.Drawing.Point(12, 78);
+            this.txtVlcLocation.Name = "txtVlcLocation";
+            this.txtVlcLocation.Size = new System.Drawing.Size(286, 20);
+            this.txtVlcLocation.TabIndex = 2;
+            this.txtVlcLocation.Text = "C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe";
             // 
-            // btnVLCLoc
+            // btnVlcLocation
             // 
-            this.btnVLCLoc.Location = new System.Drawing.Point(302, 76);
-            this.btnVLCLoc.Name = "btnVLCLoc";
-            this.btnVLCLoc.Size = new System.Drawing.Size(75, 23);
-            this.btnVLCLoc.TabIndex = 3;
-            this.btnVLCLoc.Text = "Open";
-            this.btnVLCLoc.UseVisualStyleBackColor = true;
-            this.btnVLCLoc.Click += new System.EventHandler(this.btnVLCLoc_Click);
+            this.btnVlcLocation.Location = new System.Drawing.Point(302, 76);
+            this.btnVlcLocation.Name = "btnVlcLocation";
+            this.btnVlcLocation.Size = new System.Drawing.Size(75, 23);
+            this.btnVlcLocation.TabIndex = 3;
+            this.btnVlcLocation.Text = "Open";
+            this.btnVlcLocation.UseVisualStyleBackColor = true;
+            this.btnVlcLocation.Click += new System.EventHandler(this.btnVlcLocation_Click);
             // 
-            // lblStream
+            // lblDumpLocation
             // 
-            this.lblStream.AutoSize = true;
-            this.lblStream.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.lblStream.Location = new System.Drawing.Point(9, 115);
-            this.lblStream.Name = "lblStream";
-            this.lblStream.Size = new System.Drawing.Size(125, 13);
-            this.lblStream.TabIndex = 7;
-            this.lblStream.Text = "File to save the stream to";
+            this.lblDumpLocation.AutoSize = true;
+            this.lblDumpLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblDumpLocation.Location = new System.Drawing.Point(9, 115);
+            this.lblDumpLocation.Name = "lblDumpLocation";
+            this.lblDumpLocation.Size = new System.Drawing.Size(125, 13);
+            this.lblDumpLocation.TabIndex = 7;
+            this.lblDumpLocation.Text = "File to save the stream to";
             // 
-            // txtdumploc
+            // txtDumpLocation
             // 
-            this.txtdumploc.Location = new System.Drawing.Point(12, 131);
-            this.txtdumploc.Name = "txtdumploc";
-            this.txtdumploc.Size = new System.Drawing.Size(286, 20);
-            this.txtdumploc.TabIndex = 4;
+            this.txtDumpLocation.Location = new System.Drawing.Point(12, 131);
+            this.txtDumpLocation.Name = "txtDumpLocation";
+            this.txtDumpLocation.Size = new System.Drawing.Size(286, 20);
+            this.txtDumpLocation.TabIndex = 4;
             // 
-            // btnDumpLoc
+            // btnDumpLocation
             // 
-            this.btnDumpLoc.Location = new System.Drawing.Point(302, 128);
-            this.btnDumpLoc.Name = "btnDumpLoc";
-            this.btnDumpLoc.Size = new System.Drawing.Size(75, 23);
-            this.btnDumpLoc.TabIndex = 5;
-            this.btnDumpLoc.Text = "Open";
-            this.btnDumpLoc.UseVisualStyleBackColor = true;
-            this.btnDumpLoc.Click += new System.EventHandler(this.btnDumpLoc_Click);
+            this.btnDumpLocation.Location = new System.Drawing.Point(302, 128);
+            this.btnDumpLocation.Name = "btnDumpLocation";
+            this.btnDumpLocation.Size = new System.Drawing.Size(75, 23);
+            this.btnDumpLocation.TabIndex = 5;
+            this.btnDumpLocation.Text = "Open";
+            this.btnDumpLocation.UseVisualStyleBackColor = true;
+            this.btnDumpLocation.Click += new System.EventHandler(this.btnDumpLocation_Click);
             // 
             // btnGo
             // 
@@ -172,38 +172,38 @@
             this.txtStreamURL.Size = new System.Drawing.Size(283, 20);
             this.txtStreamURL.TabIndex = 10;
             // 
-            // lblQuality
+            // lblStreamQuality
             // 
-            this.lblQuality.AutoSize = true;
-            this.lblQuality.Location = new System.Drawing.Point(146, 171);
-            this.lblQuality.Name = "lblQuality";
-            this.lblQuality.Size = new System.Drawing.Size(75, 13);
-            this.lblQuality.TabIndex = 14;
-            this.lblQuality.Text = "Stream Quality";
+            this.lblStreamQuality.AutoSize = true;
+            this.lblStreamQuality.Location = new System.Drawing.Point(146, 171);
+            this.lblStreamQuality.Name = "lblStreamQuality";
+            this.lblStreamQuality.Size = new System.Drawing.Size(75, 13);
+            this.lblStreamQuality.TabIndex = 14;
+            this.lblStreamQuality.Text = "Stream Quality";
             // 
-            // cbQuality
+            // cbStreamQuality
             // 
-            this.cbQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbQuality.FormattingEnabled = true;
-            this.cbQuality.Items.AddRange(new object[] {
+            this.cbStreamQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbStreamQuality.FormattingEnabled = true;
+            this.cbStreamQuality.Items.AddRange(new object[] {
             "SQTest",
             "SQ",
             "HQ"});
-            this.cbQuality.Location = new System.Drawing.Point(149, 187);
-            this.cbQuality.Name = "cbQuality";
-            this.cbQuality.Size = new System.Drawing.Size(118, 21);
-            this.cbQuality.TabIndex = 7;
+            this.cbStreamQuality.Location = new System.Drawing.Point(149, 187);
+            this.cbStreamQuality.Name = "cbStreamQuality";
+            this.cbStreamQuality.Size = new System.Drawing.Size(118, 21);
+            this.cbStreamQuality.TabIndex = 7;
             // 
-            // statusStrip1
+            // statusStrip
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 331);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(389, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 15;
-            this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip.Location = new System.Drawing.Point(0, 331);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(389, 22);
+            this.statusStrip.SizingGrip = false;
+            this.statusStrip.TabIndex = 15;
+            this.statusStrip.Text = "statusStrip";
             // 
             // statusLabel
             // 
@@ -220,14 +220,14 @@
             this.lblKoreanTime.TabIndex = 17;
             this.lblKoreanTime.Text = "Korean Time (HH:MM)";
             // 
-            // label2
+            // lblMode
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 171);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 13);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "Mode";
+            this.lblMode.AutoSize = true;
+            this.lblMode.Location = new System.Drawing.Point(12, 171);
+            this.lblMode.Name = "lblMode";
+            this.lblMode.Size = new System.Drawing.Size(34, 13);
+            this.lblMode.TabIndex = 19;
+            this.lblMode.Text = "Mode";
             // 
             // cbMode
             // 
@@ -243,35 +243,35 @@
             this.cbMode.TabIndex = 6;
             this.cbMode.SelectedIndexChanged += new System.EventHandler(this.cbMode_SelectedIndexChanged);
             // 
-            // koreanMinute
+            // frmKoreanMinute
             // 
-            this.koreanMinute.Location = new System.Drawing.Point(328, 188);
-            this.koreanMinute.Maximum = new decimal(new int[] {
+            this.frmKoreanMinute.Location = new System.Drawing.Point(328, 188);
+            this.frmKoreanMinute.Maximum = new decimal(new int[] {
             59,
             0,
             0,
             0});
-            this.koreanMinute.Name = "koreanMinute";
-            this.koreanMinute.Size = new System.Drawing.Size(49, 20);
-            this.koreanMinute.TabIndex = 9;
-            this.koreanMinute.Value = new decimal(new int[] {
+            this.frmKoreanMinute.Name = "frmKoreanMinute";
+            this.frmKoreanMinute.Size = new System.Drawing.Size(49, 20);
+            this.frmKoreanMinute.TabIndex = 9;
+            this.frmKoreanMinute.Value = new decimal(new int[] {
             10,
             0,
             0,
             0});
             // 
-            // koreanHour
+            // frmKoreanHour
             // 
-            this.koreanHour.Location = new System.Drawing.Point(273, 188);
-            this.koreanHour.Maximum = new decimal(new int[] {
+            this.frmKoreanHour.Location = new System.Drawing.Point(273, 188);
+            this.frmKoreanHour.Maximum = new decimal(new int[] {
             23,
             0,
             0,
             0});
-            this.koreanHour.Name = "koreanHour";
-            this.koreanHour.Size = new System.Drawing.Size(49, 20);
-            this.koreanHour.TabIndex = 8;
-            this.koreanHour.Value = new decimal(new int[] {
+            this.frmKoreanHour.Name = "frmKoreanHour";
+            this.frmKoreanHour.Size = new System.Drawing.Size(49, 20);
+            this.frmKoreanHour.TabIndex = 8;
+            this.frmKoreanHour.Value = new decimal(new int[] {
             18,
             0,
             0,
@@ -301,36 +301,36 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(389, 353);
             this.Controls.Add(this.btnAbout);
-            this.Controls.Add(this.koreanHour);
-            this.Controls.Add(this.koreanMinute);
+            this.Controls.Add(this.frmKoreanHour);
+            this.Controls.Add(this.frmKoreanMinute);
             this.Controls.Add(this.cbMode);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lblMode);
             this.Controls.Add(this.lblKoreanTime);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.cbQuality);
-            this.Controls.Add(this.lblQuality);
+            this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.cbStreamQuality);
+            this.Controls.Add(this.lblStreamQuality);
             this.Controls.Add(this.txtStreamURL);
             this.Controls.Add(this.lblStreamURL);
             this.Controls.Add(this.btnGo);
-            this.Controls.Add(this.btnDumpLoc);
-            this.Controls.Add(this.txtdumploc);
-            this.Controls.Add(this.lblStream);
-            this.Controls.Add(this.btnVLCLoc);
-            this.Controls.Add(this.txtVLCloc);
-            this.Controls.Add(this.lblVLCloc);
-            this.Controls.Add(this.txtPassword);
-            this.Controls.Add(this.lblPassword);
-            this.Controls.Add(this.lblEmail);
-            this.Controls.Add(this.txtEmail);
+            this.Controls.Add(this.btnDumpLocation);
+            this.Controls.Add(this.txtDumpLocation);
+            this.Controls.Add(this.lblDumpLocation);
+            this.Controls.Add(this.btnVlcLocation);
+            this.Controls.Add(this.txtVlcLocation);
+            this.Controls.Add(this.lblVlcLocation);
+            this.Controls.Add(this.txtUserPassword);
+            this.Controls.Add(this.lblUserPassword);
+            this.Controls.Add(this.lblEmailAddress);
+            this.Controls.Add(this.txtEmailAddress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.Text = "GOMstreamer";
             this.Load += new System.EventHandler(this.MainWindow_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.koreanMinute)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.koreanHour)).EndInit();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.frmKoreanMinute)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.frmKoreanHour)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -338,28 +338,28 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtEmail;
-        private System.Windows.Forms.Label lblEmail;
-        private System.Windows.Forms.Label lblPassword;
-        private System.Windows.Forms.TextBox txtPassword;
-        private System.Windows.Forms.Label lblVLCloc;
-        private System.Windows.Forms.TextBox txtVLCloc;
-        private System.Windows.Forms.Button btnVLCLoc;
-        private System.Windows.Forms.Label lblStream;
-        private System.Windows.Forms.TextBox txtdumploc;
-        private System.Windows.Forms.Button btnDumpLoc;
+        private System.Windows.Forms.TextBox txtEmailAddress;
+        private System.Windows.Forms.Label lblEmailAddress;
+        private System.Windows.Forms.Label lblUserPassword;
+        private System.Windows.Forms.TextBox txtUserPassword;
+        private System.Windows.Forms.Label lblVlcLocation;
+        private System.Windows.Forms.TextBox txtVlcLocation;
+        private System.Windows.Forms.Button btnVlcLocation;
+        private System.Windows.Forms.Label lblDumpLocation;
+        private System.Windows.Forms.TextBox txtDumpLocation;
+        private System.Windows.Forms.Button btnDumpLocation;
         private System.Windows.Forms.Button btnGo;
         private System.Windows.Forms.Label lblStreamURL;
         private System.Windows.Forms.TextBox txtStreamURL;
-        private System.Windows.Forms.Label lblQuality;
-        private System.Windows.Forms.ComboBox cbQuality;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.Label lblStreamQuality;
+        private System.Windows.Forms.ComboBox cbStreamQuality;
+        private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private System.Windows.Forms.Label lblKoreanTime;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblMode;
         private System.Windows.Forms.ComboBox cbMode;
-        private System.Windows.Forms.NumericUpDown koreanMinute;
-        private System.Windows.Forms.NumericUpDown koreanHour;
+        private System.Windows.Forms.NumericUpDown frmKoreanMinute;
+        private System.Windows.Forms.NumericUpDown frmKoreanHour;
         private System.Windows.Forms.Button btnAbout;
         private System.Windows.Forms.NotifyIcon gomNotifyIcon;
     }

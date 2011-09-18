@@ -13,7 +13,7 @@ namespace GOMstreamer
         {
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle);
-            this.lblVersionTxt.Text = AssemblyProduct + " v0.7.0";
+            this.lblVersionTxt.Text = AssemblyProduct + " v0.7.1";
             this.lblCopyright.Text = AssemblyCopyright;
         }
 
@@ -99,12 +99,12 @@ namespace GOMstreamer
 
         private void lblsjp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(lblsjp.Text);
+            System.Diagnostics.Process.Start(linkSjp.Text);
         }
 
         private void lblGHLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://github.com/" + lblGHLink.Text);
+            System.Diagnostics.Process.Start("http://github.com/" + linkGithub.Text);
         }
 
         private void okButton_Click(object sender, EventArgs e)

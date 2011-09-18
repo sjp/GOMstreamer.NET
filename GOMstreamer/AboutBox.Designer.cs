@@ -30,11 +30,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutBox));
             this.lblVersionTxt = new System.Windows.Forms.Label();
             this.lblCopyright = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lblGHLink = new System.Windows.Forms.LinkLabel();
-            this.lblsjp = new System.Windows.Forms.LinkLabel();
-            this.okButton = new System.Windows.Forms.Button();
+            this.lblDocumentation = new System.Windows.Forms.Label();
+            this.lblGithub = new System.Windows.Forms.Label();
+            this.linkGithub = new System.Windows.Forms.LinkLabel();
+            this.linkSjp = new System.Windows.Forms.LinkLabel();
+            this.btnOkButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblVersionTxt
@@ -44,7 +44,7 @@
             this.lblVersionTxt.Name = "lblVersionTxt";
             this.lblVersionTxt.Size = new System.Drawing.Size(105, 13);
             this.lblVersionTxt.TabIndex = 0;
-            this.lblVersionTxt.Text = "GOMstreamer v0.7.0";
+            this.lblVersionTxt.Text = "GOMstreamer v0.7.1";
             // 
             // lblCopyright
             // 
@@ -56,68 +56,68 @@
             this.lblCopyright.TabIndex = 1;
             this.lblCopyright.Text = "Copyright ©2011 Simon Potter";
             // 
-            // label3
+            // lblDocumentation
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 61);
-            this.label3.Margin = new System.Windows.Forms.Padding(0, 12, 12, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(149, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Documentation is available at:";
+            this.lblDocumentation.AutoSize = true;
+            this.lblDocumentation.Location = new System.Drawing.Point(12, 61);
+            this.lblDocumentation.Margin = new System.Windows.Forms.Padding(0, 12, 12, 12);
+            this.lblDocumentation.Name = "lblDocumentation";
+            this.lblDocumentation.Size = new System.Drawing.Size(149, 13);
+            this.lblDocumentation.TabIndex = 2;
+            this.lblDocumentation.Text = "Documentation is available at:";
             // 
-            // label4
+            // lblGithub
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 86);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(212, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "The source code is available on GitHub at: ";
+            this.lblGithub.AutoSize = true;
+            this.lblGithub.Location = new System.Drawing.Point(12, 86);
+            this.lblGithub.Name = "lblGithub";
+            this.lblGithub.Size = new System.Drawing.Size(212, 13);
+            this.lblGithub.TabIndex = 3;
+            this.lblGithub.Text = "The source code is available on GitHub at: ";
             // 
-            // lblGHLink
+            // linkGithub
             // 
-            this.lblGHLink.AutoSize = true;
-            this.lblGHLink.Location = new System.Drawing.Point(216, 86);
-            this.lblGHLink.Name = "lblGHLink";
-            this.lblGHLink.Size = new System.Drawing.Size(115, 13);
-            this.lblGHLink.TabIndex = 4;
-            this.lblGHLink.TabStop = true;
-            this.lblGHLink.Text = "sjp/GOMstreamer.NET";
-            this.lblGHLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblGHLink_LinkClicked);
+            this.linkGithub.AutoSize = true;
+            this.linkGithub.Location = new System.Drawing.Point(216, 86);
+            this.linkGithub.Name = "linkGithub";
+            this.linkGithub.Size = new System.Drawing.Size(115, 13);
+            this.linkGithub.TabIndex = 4;
+            this.linkGithub.TabStop = true;
+            this.linkGithub.Text = "sjp/GOMstreamer.NET";
+            this.linkGithub.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblGHLink_LinkClicked);
             // 
-            // lblsjp
+            // linkSjp
             // 
-            this.lblsjp.AutoSize = true;
-            this.lblsjp.Location = new System.Drawing.Point(157, 61);
-            this.lblsjp.Name = "lblsjp";
-            this.lblsjp.Size = new System.Drawing.Size(192, 13);
-            this.lblsjp.TabIndex = 5;
-            this.lblsjp.TabStop = true;
-            this.lblsjp.Text = "http://sjp.co.nz/projects/gomstreamer/";
-            this.lblsjp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblsjp_LinkClicked);
+            this.linkSjp.AutoSize = true;
+            this.linkSjp.Location = new System.Drawing.Point(157, 61);
+            this.linkSjp.Name = "linkSjp";
+            this.linkSjp.Size = new System.Drawing.Size(192, 13);
+            this.linkSjp.TabIndex = 5;
+            this.linkSjp.TabStop = true;
+            this.linkSjp.Text = "http://sjp.co.nz/projects/gomstreamer/";
+            this.linkSjp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblsjp_LinkClicked);
             // 
-            // okButton
+            // btnOkButton
             // 
-            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.okButton.Location = new System.Drawing.Point(277, 126);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 25;
-            this.okButton.Text = "&OK";
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            this.btnOkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOkButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnOkButton.Location = new System.Drawing.Point(277, 126);
+            this.btnOkButton.Name = "btnOkButton";
+            this.btnOkButton.Size = new System.Drawing.Size(75, 23);
+            this.btnOkButton.TabIndex = 25;
+            this.btnOkButton.Text = "&OK";
+            this.btnOkButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // AboutBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(364, 161);
-            this.Controls.Add(this.okButton);
-            this.Controls.Add(this.lblsjp);
-            this.Controls.Add(this.lblGHLink);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.btnOkButton);
+            this.Controls.Add(this.linkSjp);
+            this.Controls.Add(this.linkGithub);
+            this.Controls.Add(this.lblGithub);
+            this.Controls.Add(this.lblDocumentation);
             this.Controls.Add(this.lblCopyright);
             this.Controls.Add(this.lblVersionTxt);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -139,11 +139,11 @@
 
         private System.Windows.Forms.Label lblVersionTxt;
         private System.Windows.Forms.Label lblCopyright;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.LinkLabel lblGHLink;
-        private System.Windows.Forms.LinkLabel lblsjp;
-        private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Label lblDocumentation;
+        private System.Windows.Forms.Label lblGithub;
+        private System.Windows.Forms.LinkLabel linkGithub;
+        private System.Windows.Forms.LinkLabel linkSjp;
+        private System.Windows.Forms.Button btnOkButton;
 
     }
 }
