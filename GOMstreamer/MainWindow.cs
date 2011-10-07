@@ -12,7 +12,7 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.7.1");
+        Version VERSION = new Version("0.7.2");
         string emailAddress = "";
         string userPassword = "";
         string vlcLocation = "";
@@ -439,12 +439,19 @@ namespace GOMstreamer
 
         }
 
-        private string getSeasonURL(string gomtvUrl)
+        private string getSeasonURL(string gomtvUrl, string method)
         {
             statusLabel.Text = "Collecting the latest season URL.";
+            string seasonUrl = "";
 
-            string seasonURL = getSeasonURL_gom(gomtvUrl);
-            return seasonURL;
+            if (method == "url")
+                seasonUrl = "/main/goLive.gom";
+            else if (method == "html")
+                seasonUrl = getSeasonURL_gom(gomtvUrl);
+            else
+                seasonUrl = getSeasonURL_sjp();
+
+            return gomtvUrl + seasonUrl;
         }
 
         private string getSeasonURL_gom(string gomtvUrl)
@@ -475,7 +482,7 @@ namespace GOMstreamer
                 seasonUrl = getSeasonURL_sjp();
             }
 
-            string currentSeasonUrl = gomtvUrl + seasonUrl;
+            string currentSeasonUrl = seasonUrl;
             return currentSeasonUrl;
         }
 
@@ -501,7 +508,7 @@ namespace GOMstreamer
         private string getStreamURL()
         {            
             string gomtvURL = "http://www.gomtv.net";
-            string gomtvLiveUrl = getSeasonURL(gomtvURL);
+            string gomtvLiveUrl = getSeasonURL(gomtvURL, "url");
             cookieJar = new CookieContainer();
 
             // Signing in
