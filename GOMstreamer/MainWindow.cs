@@ -12,7 +12,7 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.7.2");
+        Version VERSION = new Version("0.7.3");
         string emailAddress = "";
         string userPassword = "";
         string vlcLocation = "";
@@ -571,8 +571,7 @@ namespace GOMstreamer
         {
             statusLabel.Text = "Signing in.";
 
-            string gomtvURL = "http://www.gomtv.net";
-            string gomtvSignInURL = gomtvURL + "/user/loginProcess.gom";
+            string gomtvSignInURL = "https://ssl.gomtv.net/userinfo/loginProcess.gom";
             string httpEmail = HttpUtility.UrlEncode(emailAddress);  // The email & password will have special characters that need decoding
             string httpPass = HttpUtility.UrlEncode(userPassword);
             string postdata = "rememberme=1&cmd=login&mb_username=" + httpEmail + "&mb_password=" + httpPass;  // Forming post data string
@@ -583,6 +582,7 @@ namespace GOMstreamer
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
             req.ContentLength = byteArray.Length;
+            req.Referer = "http://www.gomtv.net/";
             req.CookieContainer = cookieJar;
 
             // Sending login data to the correct URL
