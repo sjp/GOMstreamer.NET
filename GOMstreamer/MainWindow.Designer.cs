@@ -236,7 +236,7 @@
             this.cbMode.Items.AddRange(new object[] {
             "Play",
             "Save",
-            "Delayed Save"});
+            "Scheduled Save"});
             this.cbMode.Location = new System.Drawing.Point(12, 187);
             this.cbMode.Name = "cbMode";
             this.cbMode.Size = new System.Drawing.Size(131, 21);

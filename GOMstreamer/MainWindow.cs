@@ -260,8 +260,8 @@ namespace GOMstreamer
                         throw new Exception();
                 }
 
-                // Delaying execution until target KST if mode is set to 'Delayed Save'
-                if (mode == "Delayed Save")
+                // Delaying execution until target KST if mode is set to 'Scheduled Save'
+                if (mode == "Scheduled Save")
                 {
                     this.WindowState = FormWindowState.Minimized;
                     this.ShowInTaskbar = false;
@@ -746,7 +746,7 @@ namespace GOMstreamer
 
             // Enabling and disabling controls that relate to the mode
             // of execution that is currently selected
-            if (mode == "Delayed Save")
+            if (mode == "Scheduled Save")
             {
                 frmKoreanHour.Enabled = true;
                 frmKoreanMinute.Enabled = true;
