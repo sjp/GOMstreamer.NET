@@ -12,7 +12,7 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.7.3");
+        Version VERSION = new Version("0.8.0");
         string emailAddress = "";
         string userPassword = "";
         string vlcLocation = "";
@@ -645,7 +645,6 @@ namespace GOMstreamer
             }
 
             urlFromHtml = urlFromHtml.Replace("\" + playType + \"", streamQuality);
-            urlFromHtml = Regex.Replace(urlFromHtml, "\"[^;]+;", "");
 
             Regex titleRegex = new Regex("this.title[^;]+;");
             m = titleRegex.Match(liveHtml);
