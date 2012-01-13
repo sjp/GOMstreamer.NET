@@ -41,8 +41,7 @@
             this.txtDumpLocation = new System.Windows.Forms.TextBox();
             this.btnDumpLocation = new System.Windows.Forms.Button();
             this.btnGo = new System.Windows.Forms.Button();
-            this.lblStreamURL = new System.Windows.Forms.Label();
-            this.txtStreamURL = new System.Windows.Forms.TextBox();
+            this.lblStreamSelection = new System.Windows.Forms.Label();
             this.lblStreamQuality = new System.Windows.Forms.Label();
             this.cbStreamQuality = new System.Windows.Forms.ComboBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -54,6 +53,7 @@
             this.frmKoreanHour = new System.Windows.Forms.NumericUpDown();
             this.btnAbout = new System.Windows.Forms.Button();
             this.gomNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.cbStreamSelection = new System.Windows.Forms.ComboBox();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.frmKoreanMinute)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.frmKoreanHour)).BeginInit();
@@ -156,21 +156,14 @@
             this.btnGo.UseVisualStyleBackColor = true;
             this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
             // 
-            // lblStreamURL
+            // lblStreamSelection
             // 
-            this.lblStreamURL.AutoSize = true;
-            this.lblStreamURL.Location = new System.Drawing.Point(12, 225);
-            this.lblStreamURL.Name = "lblStreamURL";
-            this.lblStreamURL.Size = new System.Drawing.Size(65, 13);
-            this.lblStreamURL.TabIndex = 13;
-            this.lblStreamURL.Text = "Stream URL";
-            // 
-            // txtStreamURL
-            // 
-            this.txtStreamURL.Location = new System.Drawing.Point(15, 241);
-            this.txtStreamURL.Name = "txtStreamURL";
-            this.txtStreamURL.Size = new System.Drawing.Size(283, 20);
-            this.txtStreamURL.TabIndex = 10;
+            this.lblStreamSelection.AutoSize = true;
+            this.lblStreamSelection.Location = new System.Drawing.Point(12, 225);
+            this.lblStreamSelection.Name = "lblStreamSelection";
+            this.lblStreamSelection.Size = new System.Drawing.Size(87, 13);
+            this.lblStreamSelection.TabIndex = 13;
+            this.lblStreamSelection.Text = "Stream Selection";
             // 
             // lblStreamQuality
             // 
@@ -295,11 +288,24 @@
             this.gomNotifyIcon.Visible = true;
             this.gomNotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gomNotifyIcon_MouseDoubleClick);
             // 
+            // cbStreamSelection
+            // 
+            this.cbStreamSelection.FormattingEnabled = true;
+            this.cbStreamSelection.Items.AddRange(new object[] {
+            "First",
+            "Alternate",
+            "Both"});
+            this.cbStreamSelection.Location = new System.Drawing.Point(12, 239);
+            this.cbStreamSelection.Name = "cbStreamSelection";
+            this.cbStreamSelection.Size = new System.Drawing.Size(286, 21);
+            this.cbStreamSelection.TabIndex = 10;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(389, 353);
+            this.Controls.Add(this.cbStreamSelection);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.frmKoreanHour);
             this.Controls.Add(this.frmKoreanMinute);
@@ -309,8 +315,7 @@
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.cbStreamQuality);
             this.Controls.Add(this.lblStreamQuality);
-            this.Controls.Add(this.txtStreamURL);
-            this.Controls.Add(this.lblStreamURL);
+            this.Controls.Add(this.lblStreamSelection);
             this.Controls.Add(this.btnGo);
             this.Controls.Add(this.btnDumpLocation);
             this.Controls.Add(this.txtDumpLocation);
@@ -349,8 +354,7 @@
         private System.Windows.Forms.TextBox txtDumpLocation;
         private System.Windows.Forms.Button btnDumpLocation;
         private System.Windows.Forms.Button btnGo;
-        private System.Windows.Forms.Label lblStreamURL;
-        private System.Windows.Forms.TextBox txtStreamURL;
+        private System.Windows.Forms.Label lblStreamSelection;
         private System.Windows.Forms.Label lblStreamQuality;
         private System.Windows.Forms.ComboBox cbStreamQuality;
         private System.Windows.Forms.StatusStrip statusStrip;
@@ -362,6 +366,7 @@
         private System.Windows.Forms.NumericUpDown frmKoreanHour;
         private System.Windows.Forms.Button btnAbout;
         private System.Windows.Forms.NotifyIcon gomNotifyIcon;
+        private System.Windows.Forms.ComboBox cbStreamSelection;
     }
 }
 

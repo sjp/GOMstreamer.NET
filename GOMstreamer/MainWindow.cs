@@ -12,13 +12,15 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.8.0");
+        Version VERSION = new Version("0.9.0");
+        int numberOfStreams = 0;
         string emailAddress = "";
         string userPassword = "";
         string vlcLocation = "";
         string dumpLocation = "";
-        string streamUrlLocation = "";
+        string[] streamUrlLocations = { "" };
         string streamQuality = "SQTest";
+        string streamChoice = "First";
         string mode = "Save";
         TimeSpan timeToWait;
         Timer streamDelayTimer = new Timer();
@@ -56,6 +58,11 @@ namespace GOMstreamer
 
             writer.WriteStartElement("streamQuality");
             writer.WriteAttributeString("index", cbStreamQuality.SelectedIndex.ToString());
+            writer.WriteString(streamQuality);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("streamChoice");
+            writer.WriteAttributeString("index", cbStreamSelection.SelectedIndex.ToString());
             writer.WriteString(streamQuality);
             writer.WriteEndElement();
 
@@ -116,6 +123,12 @@ namespace GOMstreamer
                             streamQuality = reader.ReadElementContentAsString();
                         }
 
+                        if (reader.Name == "streamChoice")
+                        {
+                            cbStreamSelection.SelectedIndex = int.Parse(reader["index"]);
+                            streamChoice = reader.ReadElementContentAsString();
+                        }
+
                         if (reader.Name == "mode")
                         {
                             cbMode.SelectedIndex = int.Parse(reader["index"]);
@@ -150,8 +163,9 @@ namespace GOMstreamer
             cbMode.SelectedIndex = 1;
             mode = cbMode.SelectedItem.ToString();
 
-            // Disabling to avoid confusion, will enable once a stream URL has been collected
-            txtStreamURL.Enabled = false;
+            // By default, choose the first stream that we can find
+            cbStreamSelection.SelectedIndex = 0;
+            streamChoice = cbStreamSelection.SelectedItem.ToString();            
 
             // Checking for the Program Files folder location on the OS
             string progfiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
@@ -230,6 +244,7 @@ namespace GOMstreamer
             vlcLocation = txtVlcLocation.Text;
             dumpLocation = txtDumpLocation.Text;
             streamQuality = cbStreamQuality.SelectedItem.ToString();
+            streamChoice = cbStreamSelection.SelectedItem.ToString();
             mode = cbMode.SelectedItem.ToString();
             string dumplocdir = dumpLocation.Substring(0, dumpLocation.LastIndexOf("\\"));
             
@@ -295,37 +310,49 @@ namespace GOMstreamer
                 // Saving settings is not particularly important.
             }
         }
-        
+
         private void grabStream()
         {
             dumpLocation = txtDumpLocation.Text;
-            string streamUrl = getStreamURL();
-
-            // If the user has changed the text field, update it with the correct value
-            if (txtStreamURL.Text != streamUrl)
-            {
-                txtStreamURL.Text = streamUrl;
-                txtStreamURL.Enabled = true;
-            }
+            string[] streamUrls = getStreamURLs();
 
             // Run VLC with the correct arguments
             statusLabel.Text = "Executing wget.";
 
             string wgetCmd = "wget.exe";
             string wgetArgs = "";
-            string combinedCmd = "";
+            string[] combinedCmd = new string[numberOfStreams];
 
             if (mode != "Play")
             {
-                wgetArgs +=  "-U KPeerClient " + streamUrl + " -O \"" + dumpLocation + "\"";
-                combinedCmd = wgetArgs;
+                if (streamChoice == "First" || streamChoice == "Alternate")
+                {
+                    wgetArgs += "-U KPeerClient --tries 1 \"" + streamUrls[0] + "\" -O \"" + dumpLocation + "\"";
+                    combinedCmd = new string[] { wgetArgs };
+                }
+                
+                if (streamChoice == "Both")
+                {
+                    for (int i = 0; i < numberOfStreams; i++)
+                    {
+                        // In the case when we're grabbing two streams simultaneously
+                        // assume the second stream dump location is simply the specified filename
+                        // with a prepended string.
+                        if (i > 0)
+                            dumpLocation = "alternate-" + dumpLocation;
+                        wgetArgs += "-U KPeerClient --tries 1 \"" + streamUrls[i] + "\" -O \"" + dumpLocation + "\"";
+                        combinedCmd[i] = wgetArgs;
+                    }
+                }
             }
 
-            Process cmd = new Process();
-            cmd.StartInfo.FileName = wgetCmd;
-            cmd.StartInfo.Arguments = combinedCmd;
-            cmd.Start();
-
+            foreach (string c in combinedCmd)
+            {
+                Process cmd = new Process();
+                cmd.StartInfo.FileName = wgetCmd;
+                cmd.StartInfo.Arguments = c;
+                cmd.Start();
+            }
             // Resetting the label as all execution has been done
             statusLabel.Text = "Ready.";
         }
@@ -411,7 +438,7 @@ namespace GOMstreamer
         {
             statusLabel.Text = "Checking for updates.";
 
-            string versionUrl = "http://sjp.co.nz/projects/gomstreamer/version.txt";
+            string versionUrl = "http://sjp.co.nz/projects/gomstreamer/version-win.txt";
             HttpWebRequest versionRequest = (HttpWebRequest)WebRequest.Create(versionUrl);
             versionRequest.Method = "GET";
             versionRequest.Timeout = 15000;  // Ensuring no long wait if the webserver is down
@@ -469,7 +496,7 @@ namespace GOMstreamer
             homeResponse.Close();
 
             // The home page has been collected. Now to parse for the current season
-            Regex linkRegex = new Regex("<a href=\"([^\"]*)\" class=\"golive_btn");
+            Regex linkRegex = new Regex(".*liveicon\"><a href=\"([^\"]*)\"");
             Match m = linkRegex.Match(response);
             string seasonUrl = "";
 
@@ -505,7 +532,7 @@ namespace GOMstreamer
             return currentSeasonURL;
         }
         
-        private string getStreamURL()
+        private string[] getStreamURLs()
         {            
             string gomtvURL = "http://www.gomtv.net";
             string gomtvLiveUrl = getSeasonURL(gomtvURL, "url");
@@ -561,10 +588,10 @@ namespace GOMstreamer
                 }
             }
 
-            string goxUrl = parseGOXUrl(liveHtml);  // Getting the GOX XML file
-            string httpStream = parseHTTPStream(goxUrl);  // Getting the HTTP stream from the GOX XML file
-            streamUrlLocation = httpStream;
-            return httpStream;
+            string[] goxUrls = parseGOXUrls(liveHtml);  // Getting the GOX XML file
+            string[] httpStreams = parseHTTPStreams(goxUrls);  // Getting the HTTP stream from the GOX XML file
+            streamUrlLocations = httpStreams;
+            return httpStreams;
         }
 
         private void signIn()
@@ -626,25 +653,24 @@ namespace GOMstreamer
             return urlFromHtml;
         }
 
-        private string parseGOXUrl(string liveHtml)
+        private string[] parseGOXUrls(string liveHtml)
         {
             statusLabel.Text = "Parsing the 'Live' page for the GOX XML link.";
 
             // The live page has been collected. Now to parse for the stream via regex
-            Regex linkRegex = new Regex("http://www.gomtv.net/gox[^;]+;");
+            Regex linkRegex = new Regex("[^/]+var.+(http://www.gomtv.net/gox[^;]+;)");
             Match m = linkRegex.Match(liveHtml);
             string urlFromHtml = "";
 
             if (m.Success)
             {
-                urlFromHtml = m.Groups[0].Value;
+                    urlFromHtml = m.Groups[1].Value;
+                    urlFromHtml = urlFromHtml.Replace("\" + playType + \"", streamQuality);
             }
             else
             {
                 throw new WebException("Unable to parse GOX XML URL from the live page.");
             }
-
-            urlFromHtml = urlFromHtml.Replace("\" + playType + \"", streamQuality);
 
             Regex titleRegex = new Regex("this.title[^;]+;");
             m = titleRegex.Match(liveHtml);
@@ -653,90 +679,141 @@ namespace GOMstreamer
             if (m.Success)
             {
                 titleFromHtml = m.Groups[0].Value;
+                titleRegex = new Regex("\"(.*)\"");
+                m = titleRegex.Match(titleFromHtml);
+
+                if (m.Success)
+                {
+                    titleFromHtml = m.Groups[0].Value;
+                    titleFromHtml = titleFromHtml.Replace("\"", "");
+                    urlFromHtml = Regex.Replace(urlFromHtml, "tmpThis.title[^;]+;", titleFromHtml);
+                    urlFromHtml = urlFromHtml.Replace("\"+ ", "");
+                }
+                else
+                {
+                    throw new WebException("Unable to parse stream title from the live page.");
+                }
             }
             else
             {
                 throw new WebException("Unable to parse stream title from the live page.");
             }
 
-            titleRegex = new Regex("\"(.*)\"");
-            m = titleRegex.Match(titleFromHtml);
+            Regex liveRegex = new Regex("<a\\shref=\"/live/index.gom?conid=(?<conid>\\d+)\"\\sclass=\"live_now\"\\stitle=\"(?<title>[^\"]+)");
+            MatchCollection mc = liveRegex.Matches(liveHtml);
+            numberOfStreams = Math.Max(1, mc.Count);
 
-            if (m.Success)
+            if (numberOfStreams > 1)
             {
-                titleFromHtml = m.Groups[0].Value;
+                string[] goxUrls = new string[numberOfStreams];
+                for (int i = 0; i < numberOfStreams; i++)
+                {
+                    m = mc[i];
+                    string singleUrlFromHtml = Regex.Replace(urlFromHtml, "conid=\\d+", "conid=" + m.Groups["conid"].Value);
+                    string singleTitleHTML = string.Join("+", m.Groups["title"].Value.Split(' '));
+                    singleUrlFromHtml = Regex.Replace(singleUrlFromHtml, "title=[\\w|.|+]*", "title=" + singleTitleHTML);
+                    goxUrls[i] = singleUrlFromHtml;
+                }
+                return goxUrls;
             }
             else
             {
-                throw new WebException("Unable to parse stream title from the live page.");
+                return new string[] { urlFromHtml };
             }
-
-            titleFromHtml = titleFromHtml.Replace("\"", "");
-            string goxUrl = urlFromHtml + titleFromHtml;
-            return goxUrl;
         }
 
-        private string parseHTTPStream(string goxUrl)
+        private string[] parseHTTPStreams(string[] goxUrls)
         {
             statusLabel.Text = "Grabbing the GOX XML file.";
 
-            // Now we have the link to the XML file that contains the actual stream link
-            // Grabbing it now
-            HttpWebRequest goxRequest = (HttpWebRequest)WebRequest.Create(goxUrl);
-            goxRequest.Method = "GET";
-            goxRequest.CookieContainer = cookieJar;  // Using the authenticated cookies
-            HttpWebResponse goxResponse = (HttpWebResponse)goxRequest.GetResponse();  // Grabbing the GOX XML file
-            StreamReader goxReader = new StreamReader(goxResponse.GetResponseStream(), Encoding.UTF8);
-            string goxXml = goxReader.ReadToEnd();
-            goxReader.Close();
-            goxReader.Dispose();
-            goxResponse.Close();
+            string[] goxXmls = new string[numberOfStreams];
+            for (int i = 0; i < numberOfStreams; i++)
+            {
+                string goxUrl = goxUrls[i];
+                // Now we have the link to the XML file that contains the actual stream link
+                
+                bool validGoxUrl = false;
+                while (!validGoxUrl)
+                {
+                    // Grabbing GOX XML file now
+                    HttpWebRequest goxRequest = (HttpWebRequest)WebRequest.Create(goxUrl);
+                    goxRequest.Method = "GET";
+                    goxRequest.CookieContainer = cookieJar;  // Using the authenticated cookies
+                    HttpWebResponse goxResponse = (HttpWebResponse)goxRequest.GetResponse();  // Grabbing the GOX XML file
+                    StreamReader goxReader = new StreamReader(goxResponse.GetResponseStream(), Encoding.UTF8);
+                    goxXmls[i] = goxReader.ReadToEnd();
+                    goxReader.Close();
+                    goxReader.Dispose();
+                    goxResponse.Close();
 
-            if (goxXml == "1002")
-                throw new WebException("Please purchase a premium ticket to watch higher quality streams. Use the 'SQTest' stream quality instead.");
-
+                    if (goxXmls[i] == "1002" | goxXmls[i] == "")
+                    {
+                        // If we do not have access to the higher quality streams
+                        // because of a lack of a premium ticket, step the quality down
+                        // a notch and try again.
+                        if (streamQuality == "HQ")
+                            streamQuality = "SQ";
+                        else
+                            streamQuality = "SQTest";
+                    }
+                    else
+                    {
+                        validGoxUrl = true;
+                    }
+                }
+            }
+            
             // Have the XML file, now to parse for the stream link
-            statusLabel.Text = "Parsing the GOX XML file for the HTTP stream URL.";
+            statusLabel.Text = "Parsing the GOX XML file(s) for the HTTP stream URL.";
+            string[] streamUrls = new string[numberOfStreams];
 
-            Regex goxRegex = new Regex("<REF href=\"([^\"]*)\"/>");
-            Match m = goxRegex.Match(goxXml);
-            string streamUrl = "";
-
-            if (m.Success)
+            Regex goxRegex = new Regex("<REF href=\"([^\"]*)\"\\s/>");
+            for (int i = 0; i < numberOfStreams; i++)
             {
-                streamUrl = m.Groups[1].Value;
-            }
-            else
-            {
-                throw new WebException("Unable to parse gomcmd URL from the GOX XML file.");
-            }
+                string goxXml = goxXmls[i];
+                Match m = goxRegex.Match(goxXml);
+                string streamUrl = "";
 
-            // The stream link is much simpler to parse, all we need to do is clean up
-            // the contents of the href in the XML
-            if (!isEvent && (streamQuality == "HQ" || streamQuality == "SQ"))
-            {
-                streamUrl = HttpUtility.UrlDecode(streamUrl); // Creating a more readable stream URL
-                streamUrl = streamUrl.Replace("&amp;", "&");  // Decoding &amp; HTML entity
-                streamUrl = streamUrl.Replace(" ", "");  // Remove White Spaces, thanks Rolf
-                return streamUrl;
-            }
+                if (m.Success)
+                {
+                    streamUrl = m.Groups[1].Value;
+                }
+                else
+                {
+                    throw new WebException("Unable to parse gomcmd URL from the GOX XML file.");
+                }
 
-            goxRegex = new Regex("(http%3[Aa].+)&quot;");
-            m = goxRegex.Match(goxXml);
+                // The stream link is much simpler to parse, all we need to do is clean up
+                // the contents of the href in the XML
+                if (!isEvent && (streamQuality == "HQ" || streamQuality == "SQ"))
+                {
+                    streamUrl = HttpUtility.UrlDecode(streamUrl); // Creating a more readable stream URL
+                    streamUrl = streamUrl.Replace("&amp;", "&");  // Decoding &amp; HTML entity
+                    streamUrl = streamUrl.Replace(" ", "");  // Remove White Spaces, thanks Rolf
+                    streamUrls[i] = streamUrl;
+                }
+                else
+                {
+                    Regex sqtestRegex = new Regex("(http%3[Aa].+)&quot;");
+                    m = sqtestRegex.Match(goxXml);
 
-            if (m.Success)
-            {
-                streamUrl = m.Groups[0].Value;
-            }
-            else
-            {
-                throw new WebException("Unable to parse HTTP stream from gomcmd URL.");
-            }
+                    if (m.Success)
+                    {
+                        streamUrl = m.Groups[0].Value;
+                    }
+                    else
+                    {
+                        throw new WebException("Unable to parse HTTP stream from gomcmd URL.");
+                    }
 
-            streamUrl = HttpUtility.UrlDecode(streamUrl); // Creating a more readable stream URL
-            streamUrl = streamUrl.Replace("&amp;", "&");  // Decoding &amp; HTML entity
-            streamUrl = streamUrl.Replace("&quot;", "");  // Removing an unnecessary HTML entity
-            return streamUrl;
+                    streamUrl = HttpUtility.UrlDecode(streamUrl); // Creating a more readable stream URL
+                    streamUrl = streamUrl.Replace(" ", "+");      // UrlDecode turns +'s into spaces, undo it
+                    streamUrl = streamUrl.Replace("&amp;", "&");  // Decoding &amp; HTML entity
+                    streamUrl = streamUrl.Replace("&quot;", "");  // Removing an unnecessary HTML entity
+                    streamUrls[i] = streamUrl;
+                }
+            }
+            return streamUrls;
         }
 
         private void cbMode_SelectedIndexChanged(object sender, EventArgs e)
