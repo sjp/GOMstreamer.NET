@@ -44,7 +44,7 @@
             this.lblVersionTxt.Name = "lblVersionTxt";
             this.lblVersionTxt.Size = new System.Drawing.Size(105, 13);
             this.lblVersionTxt.TabIndex = 0;
-            this.lblVersionTxt.Text = "GOMstreamer v0.9.0";
+            this.lblVersionTxt.Text = "GOMstreamer v0.9.1";
             // 
             // lblCopyright
             // 
@@ -54,7 +54,7 @@
             this.lblCopyright.Name = "lblCopyright";
             this.lblCopyright.Size = new System.Drawing.Size(150, 13);
             this.lblCopyright.TabIndex = 1;
-            this.lblCopyright.Text = "Copyright ©2011 Simon Potter";
+            this.lblCopyright.Text = "Copyright ©2012 Simon Potter";
             // 
             // lblDocumentation
             // 

@@ -12,7 +12,7 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.9.0");
+        Version VERSION = new Version("0.9.1");
         int numberOfStreams = 0;
         string emailAddress = "";
         string userPassword = "";
@@ -22,6 +22,7 @@ namespace GOMstreamer
         string streamQuality = "SQTest";
         string streamChoice = "First";
         string mode = "Save";
+        string[] dumpLocations = { "", "" };
         TimeSpan timeToWait;
         Timer streamDelayTimer = new Timer();
         CookieContainer cookieJar = new CookieContainer();
@@ -158,9 +159,8 @@ namespace GOMstreamer
             cbStreamQuality.SelectedIndex = 0;
             streamQuality = cbStreamQuality.SelectedItem.ToString();
 
-            // Setting default execution mode to 'Save'
-            // Will set this back to 'Play' if I can pipe output to VLC correctly
-            cbMode.SelectedIndex = 1;
+            // Setting default execution mode to 'Play'
+            cbMode.SelectedIndex = 0;
             mode = cbMode.SelectedItem.ToString();
 
             // By default, choose the first stream that we can find
@@ -257,7 +257,7 @@ namespace GOMstreamer
             // Catch any exceptions and display the message if they're encountered.
             try
             {
-                if (!File.Exists(vlcLocation))
+                if (!File.Exists(vlcLocation) && mode == "Play")
                 {
                     throw new WebException("Please choose a valid VLC location.");
                 }
@@ -311,6 +311,17 @@ namespace GOMstreamer
             }
         }
 
+        private void vlcExecutePlayStream(object source, System.Timers.ElapsedEventArgs e)
+        {
+            for (int i = 0; i < numberOfStreams; i++)
+            {
+                Process cmd = new Process();
+                cmd.StartInfo.FileName = vlcLocation;
+                cmd.StartInfo.Arguments = "--file-caching 10000 \"" + dumpLocations[i] + "\" - vlc://quit";
+                cmd.Start();
+            }
+        }
+
         private void grabStream()
         {
             dumpLocation = txtDumpLocation.Text;
@@ -322,27 +333,39 @@ namespace GOMstreamer
             string wgetCmd = "wget.exe";
             string wgetArgs = "";
             string[] combinedCmd = new string[numberOfStreams];
+            System.Timers.Timer vlcTimer = new System.Timers.Timer(10000);
+            vlcTimer.Elapsed += new System.Timers.ElapsedEventHandler(vlcExecutePlayStream);
+            vlcTimer.AutoReset = false;
+            vlcTimer.Start();
 
-            if (mode != "Play")
+            if (streamChoice == "First" || streamChoice == "Alternate")
             {
-                if (streamChoice == "First" || streamChoice == "Alternate")
-                {
-                    wgetArgs += "-U KPeerClient --tries 1 \"" + streamUrls[0] + "\" -O \"" + dumpLocation + "\"";
-                    combinedCmd = new string[] { wgetArgs };
-                }
+                wgetArgs = "-U KPeerClient --tries 10 \"" + streamUrls[0] + "\" -O \"" + dumpLocation + "\"";
+                dumpLocations[0] = dumpLocation;
+                combinedCmd = new string[] { wgetArgs };
+            }
                 
-                if (streamChoice == "Both")
+            if (streamChoice == "Both")
+            {
+                string tmpLoc = "";
+                for (int i = 0; i < numberOfStreams; i++)
                 {
-                    for (int i = 0; i < numberOfStreams; i++)
+                    // In the case when we're grabbing two streams simultaneously
+                    // assume the second stream dump location is simply the specified filename
+                    // with a prepended string.
+                    if (i > 0)
                     {
-                        // In the case when we're grabbing two streams simultaneously
-                        // assume the second stream dump location is simply the specified filename
-                        // with a prepended string.
-                        if (i > 0)
-                            dumpLocation = "alternate-" + dumpLocation;
-                        wgetArgs += "-U KPeerClient --tries 1 \"" + streamUrls[i] + "\" -O \"" + dumpLocation + "\"";
-                        combinedCmd[i] = wgetArgs;
+                        string[] splitLoc = dumpLocation.Split('\\');
+                        splitLoc[(splitLoc.Length - 1)] = "alternate-" + splitLoc[(splitLoc.Length - 1)];
+                        tmpLoc = String.Join("\\", splitLoc);
                     }
+                    else
+                    {
+                        tmpLoc = dumpLocation;
+                    }
+                    dumpLocations[i] = tmpLoc;
+                    wgetArgs = "-U KPeerClient --tries 10 \"" + streamUrls[i] + "\" -O \"" + tmpLoc + "\"";
+                    combinedCmd[i] = wgetArgs;
                 }
             }
 
@@ -353,6 +376,7 @@ namespace GOMstreamer
                 cmd.StartInfo.Arguments = c;
                 cmd.Start();
             }
+
             // Resetting the label as all execution has been done
             statusLabel.Text = "Ready.";
         }
@@ -699,7 +723,7 @@ namespace GOMstreamer
                 throw new WebException("Unable to parse stream title from the live page.");
             }
 
-            Regex liveRegex = new Regex("<a\\shref=\"/live/index.gom?conid=(?<conid>\\d+)\"\\sclass=\"live_now\"\\stitle=\"(?<title>[^\"]+)");
+            Regex liveRegex = new Regex(@"<a\shref=""/live/index.gom\?conid=(?<conid>\d+)""\sclass=""live_now""\stitle=""(?<title>[^""]+)");
             MatchCollection mc = liveRegex.Matches(liveHtml);
             numberOfStreams = Math.Max(1, mc.Count);
 
@@ -833,17 +857,15 @@ namespace GOMstreamer
                 frmKoreanMinute.Enabled = false;
             }
 
-            if (mode != "Play")
+            if (mode == "Play")
             {
-                txtDumpLocation.Enabled = true;
-                btnDumpLocation.Enabled = true;
-                btnGo.Enabled = true;
+                txtVlcLocation.Enabled = true;
+                btnVlcLocation.Enabled = true;
             }
             else
             {
-                txtDumpLocation.Enabled = false;
-                btnDumpLocation.Enabled = false;
-                btnGo.Enabled = false;
+                txtVlcLocation.Enabled = false;
+                btnVlcLocation.Enabled = false;
             }
         }
 
