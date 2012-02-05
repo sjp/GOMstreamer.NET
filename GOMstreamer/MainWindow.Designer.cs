@@ -290,6 +290,7 @@
             // 
             // cbStreamSelection
             // 
+            this.cbStreamSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbStreamSelection.FormattingEnabled = true;
             this.cbStreamSelection.Items.AddRange(new object[] {
             "First",
@@ -329,6 +330,7 @@
             this.Controls.Add(this.txtEmailAddress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainWindow";
             this.Text = "GOMstreamer";
             this.Load += new System.EventHandler(this.MainWindow_Load);

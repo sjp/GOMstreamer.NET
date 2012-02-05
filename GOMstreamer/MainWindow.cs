@@ -154,6 +154,8 @@ namespace GOMstreamer
         private void MainWindow_Load(object sender, EventArgs e)
         {
             txtVlcLocation.Text = "";
+            this.Name = "MainWindow";
+            this.Resize += new EventHandler(MainWindow_Resize);
 
             // Setting default quality to SQTest
             cbStreamQuality.SelectedIndex = 0;
@@ -239,6 +241,7 @@ namespace GOMstreamer
 
         private void btnGo_Click(object sender, EventArgs e)
         {
+            btnGo.Enabled = false;
             emailAddress = txtEmailAddress.Text;
             userPassword = txtUserPassword.Text;
             vlcLocation = txtVlcLocation.Text;
@@ -291,11 +294,14 @@ namespace GOMstreamer
                     // Continuing execution...
                     grabStream();
                 }
+
+                btnGo.Enabled = true;
             }
             catch (WebException we)
             {
                 MessageBox.Show(we.Message, "GOMstreamer error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 statusLabel.Text = "Ready.";
+                btnGo.Enabled = true;
             }
             catch (Exception ex) { }
 
@@ -875,11 +881,29 @@ namespace GOMstreamer
             gsAbout.Show();
         }
 
+        private void MainWindow_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.ShowInTaskbar = false;
+                this.isMinimised = true;
+            }
+        }
+
         private void gomNotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            isMinimised = false;
-            this.ShowInTaskbar = true;
-            this.WindowState = FormWindowState.Normal;
+            if (this.isMinimised) // restore
+            {
+                this.isMinimised = false;
+                this.ShowInTaskbar = true;
+                this.WindowState = FormWindowState.Normal;
+            }
+            else // min
+            {
+                this.WindowState = FormWindowState.Minimized;
+                this.ShowInTaskbar = false;
+                this.isMinimised = true;
+            }
         }
     }
 }
