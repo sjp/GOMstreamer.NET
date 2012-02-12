@@ -12,7 +12,7 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.9.1");
+        Version VERSION = new Version("0.10.0");
         int numberOfStreams = 0;
         string emailAddress = "";
         string userPassword = "";
@@ -115,7 +115,6 @@ namespace GOMstreamer
                         if (reader.Name == "dumpLocation")
                         {
                             dumpLocation = reader.ReadElementContentAsString();
-                            txtDumpLocation.Text = dumpLocation;
                         }
 
                         if (reader.Name == "streamQuality")
@@ -184,10 +183,6 @@ namespace GOMstreamer
             // Setting the VLC location to the default location
             vlcLocation = txtVlcLocation.Text;
 
-            // Set the default save location to be dump.ogm on the Desktop
-            txtDumpLocation.Text = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Desktop\\dump.ogm";
-            dumpLocation = txtDumpLocation.Text;
-
             // Checking to see whether settings have been stored (insecurely) locally
             try
             {
@@ -203,23 +198,6 @@ namespace GOMstreamer
 
             // Resetting label once update check has been made
             statusLabel.Text = "Ready.";
-        }
-        
-        private void btnDumpLocation_Click(object sender, EventArgs e)
-        {
-            // Ensure that the saved file is an OGM file
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Ogg Media (*.ogm)|*.ogm";
-            sfd.Title = "Stream dump location";
-
-            DialogResult clickedOK = sfd.ShowDialog();
-
-            // Only assign class variables if the dialog was successful
-            if (clickedOK == DialogResult.OK)
-            {
-                dumpLocation = sfd.FileName;
-                txtDumpLocation.Text = dumpLocation;
-            }
         }
 
         private void btnVlcLocation_Click(object sender, EventArgs e)
@@ -245,7 +223,7 @@ namespace GOMstreamer
             emailAddress = txtEmailAddress.Text;
             userPassword = txtUserPassword.Text;
             vlcLocation = txtVlcLocation.Text;
-            dumpLocation = txtDumpLocation.Text;
+            dumpLocation = Path.GetTempFileName();
             streamQuality = cbStreamQuality.SelectedItem.ToString();
             streamChoice = cbStreamSelection.SelectedItem.ToString();
             mode = cbMode.SelectedItem.ToString();
@@ -260,31 +238,18 @@ namespace GOMstreamer
             // Catch any exceptions and display the message if they're encountered.
             try
             {
-                if (!File.Exists(vlcLocation) && mode == "Play")
+                if (! File.Exists(vlcLocation))
                 {
                     throw new WebException("Please choose a valid VLC location.");
                 }
 
-                if (!Directory.Exists(dumplocdir))
-                {
-                    throw new WebException("Please choose a valid location to save the stream to.");
-                }
-                if (File.Exists(dumpLocation))
-                {
-                    if (MessageBox.Show("File exists at the stream save location. Do you want to overwrite the file?",
-                                    "Overwrite?",
-                                    MessageBoxButtons.YesNo,
-                                    MessageBoxIcon.Question) == DialogResult.No)
-                        throw new Exception();
-                }
-
-                // Delaying execution until target KST if mode is set to 'Scheduled Save'
-                if (mode == "Scheduled Save")
+                // Delaying execution until target KST if mode is set to 'Scheduled Play'
+                if (mode == "Scheduled Play")
                 {
                     this.WindowState = FormWindowState.Minimized;
                     this.ShowInTaskbar = false;
                     gomNotifyIcon.BalloonTipTitle = "GOMstreamer";
-                    gomNotifyIcon.BalloonTipText = "GOMstreamer is still running, but will wait until the scheduled time to begin recording the stream.";
+                    gomNotifyIcon.BalloonTipText = "GOMstreamer is still running, but will wait until the scheduled time to begin playing the stream.";
                     gomNotifyIcon.ShowBalloonTip(3000);
                     isMinimised = true;
                     delayStream();
@@ -319,18 +284,37 @@ namespace GOMstreamer
 
         private void vlcExecutePlayStream(object source, System.Timers.ElapsedEventArgs e)
         {
-            for (int i = 0; i < numberOfStreams; i++)
+            Process cmd0 = new Process();
+            Process cmd1 = new Process();
+            cmd0.StartInfo.FileName = vlcLocation;
+            cmd0.StartInfo.Arguments = "--file-caching 10000 \"" + dumpLocations[0] + "\" - vlc://quit";
+            cmd0.Start();
+
+            if (numberOfStreams > 1)
             {
-                Process cmd = new Process();
-                cmd.StartInfo.FileName = vlcLocation;
-                cmd.StartInfo.Arguments = "--file-caching 10000 \"" + dumpLocations[i] + "\" - vlc://quit";
-                cmd.Start();
+                cmd1.StartInfo.FileName = vlcLocation;
+                cmd1.StartInfo.Arguments = "--file-caching 10000 \"" + dumpLocations[1] + "\" - vlc://quit";
+                cmd1.Start();
             }
+
+            // Now that wget is up and running for both streams
+            // wait until they're both done, then remove temp files
+            cmd0.WaitForExit();
+            cmd0.Close();
+            File.Delete(dumpLocations[0]);
+
+            if (numberOfStreams > 1)
+            {
+                cmd1.WaitForExit();
+                cmd1.Close();
+                File.Delete(dumpLocations[1]);
+            }
+
+            statusLabel.Text = "Ready.";
         }
 
         private void grabStream()
         {
-            dumpLocation = txtDumpLocation.Text;
             string[] streamUrls = getStreamURLs();
 
             // Run VLC with the correct arguments
@@ -349,6 +333,13 @@ namespace GOMstreamer
                 wgetArgs = "-U KPeerClient --tries 10 \"" + streamUrls[0] + "\" -O \"" + dumpLocation + "\"";
                 dumpLocations[0] = dumpLocation;
                 combinedCmd = new string[] { wgetArgs };
+
+                Process cmd = new Process();
+                cmd.StartInfo.FileName = wgetCmd;
+                cmd.StartInfo.Arguments = combinedCmd[0];
+                cmd.Start();
+                cmd.WaitForExit();
+                File.Delete(dumpLocation);
             }
                 
             if (streamChoice == "Both")
@@ -373,14 +364,6 @@ namespace GOMstreamer
                     wgetArgs = "-U KPeerClient --tries 10 \"" + streamUrls[i] + "\" -O \"" + tmpLoc + "\"";
                     combinedCmd[i] = wgetArgs;
                 }
-            }
-
-            foreach (string c in combinedCmd)
-            {
-                Process cmd = new Process();
-                cmd.StartInfo.FileName = wgetCmd;
-                cmd.StartInfo.Arguments = c;
-                cmd.Start();
             }
 
             // Resetting the label as all execution has been done
@@ -776,6 +759,11 @@ namespace GOMstreamer
                     goxReader.Dispose();
                     goxResponse.Close();
 
+                    if (goxXmls[i] == "1002" && streamQuality == "SQTest")
+                    {
+                        throw new WebException("Unable to use the alternate stream without a premium account.");
+                    }
+
                     if (goxXmls[i] == "1002" | goxXmls[i] == "")
                     {
                         // If we do not have access to the higher quality streams
@@ -852,7 +840,7 @@ namespace GOMstreamer
 
             // Enabling and disabling controls that relate to the mode
             // of execution that is currently selected
-            if (mode == "Scheduled Save")
+            if (mode == "Scheduled Play")
             {
                 frmKoreanHour.Enabled = true;
                 frmKoreanMinute.Enabled = true;
@@ -861,17 +849,6 @@ namespace GOMstreamer
             {
                 frmKoreanHour.Enabled = false;
                 frmKoreanMinute.Enabled = false;
-            }
-
-            if (mode == "Play")
-            {
-                txtVlcLocation.Enabled = true;
-                btnVlcLocation.Enabled = true;
-            }
-            else
-            {
-                txtVlcLocation.Enabled = false;
-                btnVlcLocation.Enabled = false;
             }
         }
 

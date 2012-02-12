@@ -37,9 +37,6 @@
             this.lblVlcLocation = new System.Windows.Forms.Label();
             this.txtVlcLocation = new System.Windows.Forms.TextBox();
             this.btnVlcLocation = new System.Windows.Forms.Button();
-            this.lblDumpLocation = new System.Windows.Forms.Label();
-            this.txtDumpLocation = new System.Windows.Forms.TextBox();
-            this.btnDumpLocation = new System.Windows.Forms.Button();
             this.btnGo = new System.Windows.Forms.Button();
             this.lblStreamSelection = new System.Windows.Forms.Label();
             this.lblStreamQuality = new System.Windows.Forms.Label();
@@ -119,36 +116,9 @@
             this.btnVlcLocation.UseVisualStyleBackColor = true;
             this.btnVlcLocation.Click += new System.EventHandler(this.btnVlcLocation_Click);
             // 
-            // lblDumpLocation
-            // 
-            this.lblDumpLocation.AutoSize = true;
-            this.lblDumpLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.lblDumpLocation.Location = new System.Drawing.Point(9, 115);
-            this.lblDumpLocation.Name = "lblDumpLocation";
-            this.lblDumpLocation.Size = new System.Drawing.Size(125, 13);
-            this.lblDumpLocation.TabIndex = 7;
-            this.lblDumpLocation.Text = "File to save the stream to";
-            // 
-            // txtDumpLocation
-            // 
-            this.txtDumpLocation.Location = new System.Drawing.Point(12, 131);
-            this.txtDumpLocation.Name = "txtDumpLocation";
-            this.txtDumpLocation.Size = new System.Drawing.Size(286, 20);
-            this.txtDumpLocation.TabIndex = 4;
-            // 
-            // btnDumpLocation
-            // 
-            this.btnDumpLocation.Location = new System.Drawing.Point(302, 128);
-            this.btnDumpLocation.Name = "btnDumpLocation";
-            this.btnDumpLocation.Size = new System.Drawing.Size(75, 23);
-            this.btnDumpLocation.TabIndex = 5;
-            this.btnDumpLocation.Text = "Open";
-            this.btnDumpLocation.UseVisualStyleBackColor = true;
-            this.btnDumpLocation.Click += new System.EventHandler(this.btnDumpLocation_Click);
-            // 
             // btnGo
             // 
-            this.btnGo.Location = new System.Drawing.Point(12, 277);
+            this.btnGo.Location = new System.Drawing.Point(12, 216);
             this.btnGo.Name = "btnGo";
             this.btnGo.Size = new System.Drawing.Size(365, 39);
             this.btnGo.TabIndex = 12;
@@ -159,7 +129,7 @@
             // lblStreamSelection
             // 
             this.lblStreamSelection.AutoSize = true;
-            this.lblStreamSelection.Location = new System.Drawing.Point(12, 225);
+            this.lblStreamSelection.Location = new System.Drawing.Point(12, 164);
             this.lblStreamSelection.Name = "lblStreamSelection";
             this.lblStreamSelection.Size = new System.Drawing.Size(87, 13);
             this.lblStreamSelection.TabIndex = 13;
@@ -168,7 +138,7 @@
             // lblStreamQuality
             // 
             this.lblStreamQuality.AutoSize = true;
-            this.lblStreamQuality.Location = new System.Drawing.Point(146, 171);
+            this.lblStreamQuality.Location = new System.Drawing.Point(146, 110);
             this.lblStreamQuality.Name = "lblStreamQuality";
             this.lblStreamQuality.Size = new System.Drawing.Size(75, 13);
             this.lblStreamQuality.TabIndex = 14;
@@ -182,7 +152,7 @@
             "SQTest",
             "SQ",
             "HQ"});
-            this.cbStreamQuality.Location = new System.Drawing.Point(149, 187);
+            this.cbStreamQuality.Location = new System.Drawing.Point(149, 126);
             this.cbStreamQuality.Name = "cbStreamQuality";
             this.cbStreamQuality.Size = new System.Drawing.Size(118, 21);
             this.cbStreamQuality.TabIndex = 7;
@@ -191,7 +161,7 @@
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 331);
+            this.statusStrip.Location = new System.Drawing.Point(0, 272);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(389, 22);
             this.statusStrip.SizingGrip = false;
@@ -207,7 +177,7 @@
             // lblKoreanTime
             // 
             this.lblKoreanTime.AutoSize = true;
-            this.lblKoreanTime.Location = new System.Drawing.Point(270, 171);
+            this.lblKoreanTime.Location = new System.Drawing.Point(270, 110);
             this.lblKoreanTime.Name = "lblKoreanTime";
             this.lblKoreanTime.Size = new System.Drawing.Size(113, 13);
             this.lblKoreanTime.TabIndex = 17;
@@ -216,7 +186,7 @@
             // lblMode
             // 
             this.lblMode.AutoSize = true;
-            this.lblMode.Location = new System.Drawing.Point(12, 171);
+            this.lblMode.Location = new System.Drawing.Point(12, 110);
             this.lblMode.Name = "lblMode";
             this.lblMode.Size = new System.Drawing.Size(34, 13);
             this.lblMode.TabIndex = 19;
@@ -228,9 +198,8 @@
             this.cbMode.FormattingEnabled = true;
             this.cbMode.Items.AddRange(new object[] {
             "Play",
-            "Save",
-            "Scheduled Save"});
-            this.cbMode.Location = new System.Drawing.Point(12, 187);
+            "Scheduled Play"});
+            this.cbMode.Location = new System.Drawing.Point(12, 126);
             this.cbMode.Name = "cbMode";
             this.cbMode.Size = new System.Drawing.Size(131, 21);
             this.cbMode.TabIndex = 6;
@@ -238,7 +207,7 @@
             // 
             // frmKoreanMinute
             // 
-            this.frmKoreanMinute.Location = new System.Drawing.Point(328, 188);
+            this.frmKoreanMinute.Location = new System.Drawing.Point(328, 127);
             this.frmKoreanMinute.Maximum = new decimal(new int[] {
             59,
             0,
@@ -255,7 +224,7 @@
             // 
             // frmKoreanHour
             // 
-            this.frmKoreanHour.Location = new System.Drawing.Point(273, 188);
+            this.frmKoreanHour.Location = new System.Drawing.Point(273, 127);
             this.frmKoreanHour.Maximum = new decimal(new int[] {
             23,
             0,
@@ -272,7 +241,7 @@
             // 
             // btnAbout
             // 
-            this.btnAbout.Location = new System.Drawing.Point(304, 238);
+            this.btnAbout.Location = new System.Drawing.Point(304, 177);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(73, 23);
             this.btnAbout.TabIndex = 11;
@@ -296,7 +265,7 @@
             "First",
             "Alternate",
             "Both"});
-            this.cbStreamSelection.Location = new System.Drawing.Point(12, 239);
+            this.cbStreamSelection.Location = new System.Drawing.Point(12, 178);
             this.cbStreamSelection.Name = "cbStreamSelection";
             this.cbStreamSelection.Size = new System.Drawing.Size(286, 21);
             this.cbStreamSelection.TabIndex = 10;
@@ -305,7 +274,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(389, 353);
+            this.ClientSize = new System.Drawing.Size(389, 294);
             this.Controls.Add(this.cbStreamSelection);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.frmKoreanHour);
@@ -318,9 +287,6 @@
             this.Controls.Add(this.lblStreamQuality);
             this.Controls.Add(this.lblStreamSelection);
             this.Controls.Add(this.btnGo);
-            this.Controls.Add(this.btnDumpLocation);
-            this.Controls.Add(this.txtDumpLocation);
-            this.Controls.Add(this.lblDumpLocation);
             this.Controls.Add(this.btnVlcLocation);
             this.Controls.Add(this.txtVlcLocation);
             this.Controls.Add(this.lblVlcLocation);
@@ -352,9 +318,6 @@
         private System.Windows.Forms.Label lblVlcLocation;
         private System.Windows.Forms.TextBox txtVlcLocation;
         private System.Windows.Forms.Button btnVlcLocation;
-        private System.Windows.Forms.Label lblDumpLocation;
-        private System.Windows.Forms.TextBox txtDumpLocation;
-        private System.Windows.Forms.Button btnDumpLocation;
         private System.Windows.Forms.Button btnGo;
         private System.Windows.Forms.Label lblStreamSelection;
         private System.Windows.Forms.Label lblStreamQuality;

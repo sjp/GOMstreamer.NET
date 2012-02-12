@@ -42,9 +42,9 @@
             this.lblVersionTxt.AutoSize = true;
             this.lblVersionTxt.Location = new System.Drawing.Point(12, 9);
             this.lblVersionTxt.Name = "lblVersionTxt";
-            this.lblVersionTxt.Size = new System.Drawing.Size(105, 13);
+            this.lblVersionTxt.Size = new System.Drawing.Size(111, 13);
             this.lblVersionTxt.TabIndex = 0;
-            this.lblVersionTxt.Text = "GOMstreamer v0.9.1";
+            this.lblVersionTxt.Text = "GOMstreamer v0.10.0";
             // 
             // lblCopyright
             // 

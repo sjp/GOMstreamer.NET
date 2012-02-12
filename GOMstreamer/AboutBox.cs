@@ -13,7 +13,7 @@ namespace GOMstreamer
         {
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle);
-            this.lblVersionTxt.Text = AssemblyProduct + " v0.9.1";
+            this.lblVersionTxt.Text = AssemblyProduct + " v0.10.0";
             this.lblCopyright.Text = AssemblyCopyright;
         }
 
