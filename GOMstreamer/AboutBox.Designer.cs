@@ -44,7 +44,7 @@
             this.lblVersionTxt.Name = "lblVersionTxt";
             this.lblVersionTxt.Size = new System.Drawing.Size(111, 13);
             this.lblVersionTxt.TabIndex = 0;
-            this.lblVersionTxt.Text = "GOMstreamer v0.10.0";
+            this.lblVersionTxt.Text = "GOMstreamer v0.10.1";
             // 
             // lblCopyright
             // 

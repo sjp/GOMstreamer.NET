@@ -12,7 +12,7 @@ namespace GOMstreamer
 {
     public partial class MainWindow : Form
     {
-        Version VERSION = new Version("0.10.0");
+        Version VERSION = new Version("0.10.1");
         int numberOfStreams = 0;
         string emailAddress = "";
         string userPassword = "";
@@ -282,6 +282,22 @@ namespace GOMstreamer
             }
         }
 
+        private void killWget()
+        {
+            foreach (Process p in Process.GetProcessesByName("wget"))
+            {
+                try
+                {
+                    p.Kill();
+                    p.WaitForExit(); // possibly with a timeout
+                }
+                catch (Exception ex)
+                {
+                    // process was terminating or can't be terminated - deal with it
+                }
+            }
+        }
+
         private void vlcExecutePlayStream(object source, System.Timers.ElapsedEventArgs e)
         {
             Process cmd0 = new Process();
@@ -301,12 +317,14 @@ namespace GOMstreamer
             // wait until they're both done, then remove temp files
             cmd0.WaitForExit();
             cmd0.Close();
+            killWget();
             File.Delete(dumpLocations[0]);
 
             if (numberOfStreams > 1)
             {
                 cmd1.WaitForExit();
                 cmd1.Close();
+                killWget();
                 File.Delete(dumpLocations[1]);
             }
 
@@ -727,7 +745,15 @@ namespace GOMstreamer
                     singleUrlFromHtml = Regex.Replace(singleUrlFromHtml, "title=[\\w|.|+]*", "title=" + singleTitleHTML);
                     goxUrls[i] = singleUrlFromHtml;
                 }
-                return goxUrls;
+
+                // Assuming that #streams at most 2.
+                if (streamChoice == "First" || streamChoice == "Alternate")
+                    numberOfStreams = 1;
+                if (streamChoice == "First")
+                    return new string[] { goxUrls[0] };
+                if (streamChoice == "Alternate")
+                    return new string[] { goxUrls[1] };
+                return goxUrls; // Alternate case where we want both streams
             }
             else
             {
@@ -759,11 +785,6 @@ namespace GOMstreamer
                     goxReader.Dispose();
                     goxResponse.Close();
 
-                    if (goxXmls[i] == "1002" && streamQuality == "SQTest")
-                    {
-                        throw new WebException("Unable to use the alternate stream without a premium account.");
-                    }
-
                     if (goxXmls[i] == "1002" | goxXmls[i] == "")
                     {
                         // If we do not have access to the higher quality streams
@@ -771,8 +792,19 @@ namespace GOMstreamer
                         // a notch and try again.
                         if (streamQuality == "HQ")
                             streamQuality = "SQ";
-                        else
+                        else if (streamQuality == "SQ")
                             streamQuality = "SQTest";
+                        else
+                        {
+                            String exText = "";
+                            if (streamChoice == "First")
+                                exText = "Unable to use the 'First' stream without a premium account.\n\nTry using the 'Alternate' stream instead.";
+                            if (streamChoice == "Alternate")
+                                exText = "Unable to use the 'Alternate' stream without a premium account.\n\nTry using the 'First' stream instead.";
+                            if (streamChoice == "Both")
+                                exText = "Unable to use one of the streams without a premium account.\n\nTry using one of 'First' or 'Alternate'.";
+                            throw new WebException(exText);
+                        }
                     }
                     else
                     {
